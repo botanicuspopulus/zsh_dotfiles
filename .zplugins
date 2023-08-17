@@ -1,0 +1,99 @@
+mattmc3/zephyr path:plugins/zfunctions
+
+ohmyzsh/ohmyzsh path:lib
+ohmyzsh/ohmyzsh path:plugins/aliases
+ohmyzsh/ohmyzsh path:plugins/alias-finder
+ohmyzsh/ohmyzsh path:plugins/ansible
+ohmyzsh/ohmyzsh path:plugins/asdf
+ohmyzsh/ohmyzsh path:plugins/autoenv
+ohmyzsh/ohmyzsh path:plugins/command-not-found
+ohmyzsh/ohmyzsh path:plugins/common-aliases
+ohmyzsh/ohmyzsh path:plugins/compleat
+ohmyzsh/ohmyzsh path:plugins/copybuffer
+ohmyzsh/ohmyzsh path:plugins/copyfile
+ohmyzsh/ohmyzsh path:plugins/copypath
+ohmyzsh/ohmyzsh path:plugins/cp
+ohmyzsh/ohmyzsh path:plugins/direnv
+ohmyzsh/ohmyzsh path:plugins/dirhistory
+ohmyzsh/ohmyzsh path:plugins/dotenv
+ohmyzsh/ohmyzsh path:plugins/encode64
+ohmyzsh/ohmyzsh path:plugins/extract
+ohmyzsh/ohmyzsh path:plugins/fancy-ctrl-z
+ohmyzsh/ohmyzsh path:plugins/fzf
+ohmyzsh/ohmyzsh path:plugins/git
+ohmyzsh/ohmyzsh path:plugins/git-extras
+ohmyzsh/ohmyzsh path:plugins/gitfast
+ohmyzsh/ohmyzsh path:plugins/git-lfs
+ohmyzsh/ohmyzsh path:plugins/gitignore
+ohmyzsh/ohmyzsh path:plugins/history
+ohmyzsh/ohmyzsh path:plugins/jsontools
+ohmyzsh/ohmyzsh path:plugins/magic-enter
+ohmyzsh/ohmyzsh path:plugins/man
+ohmyzsh/ohmyzsh path:plugins/mosh
+ohmyzsh/ohmyzsh path:plugins/nmap
+ohmyzsh/ohmyzsh path:plugins/pip
+ohmyzsh/ohmyzsh path:plugins/pipenv
+ohmyzsh/ohmyzsh path:plugins/pre-commit
+ohmyzsh/ohmyzsh path:plugins/python
+ohmyzsh/ohmyzsh path:plugins/pyenv
+ohmyzsh/ohmyzsh path:plugins/shell-proxy
+ohmyzsh/ohmyzsh path:plugins/sudo
+ohmyzsh/ohmyzsh path:plugins/tig
+ohmyzsh/ohmyzsh path:plugins/tmux
+ohmyzsh/ohmyzsh path:plugins/tmuxinator
+ohmyzsh/ohmyzsh path:plugins/urltools
+ohmyzsh/ohmyzsh path:plugins/vi-mode
+ohmyzsh/ohmyzsh path:plugins/virtualenv
+ohmyzsh/ohmyzsh path:plugins/virtualenvwrapper
+ohmyzsh/ohmyzsh path:plugins/web-search
+ohmyzsh/ohmyzsh path:plugins/zoxide
+ohmyzsh/ohmyzsh path:plugins/zsh-navigation-tools
+ohmyzsh/ohmyzsh path:plugins/zsh-interactive-cd
+
+zsh-vi-more/vi-motions
+
+romkatv/zsh-bench kind:path
+mattmc3/zman
+
+casonadams/bitwarden-cli
+
+Valiev/almostontop
+
+z-shell/F-Sy-H
+z-shell/H-S-MW
+
+unixorn/git-extra-commands
+
+DarrinTisdale/zsh-aliases-exa
+
+IngoMeyer441/zsh-easy-motion
+
+laggardkernel/zsh-thefuck
+
+Aloxaf/fzf-tab
+tom-power/fzf-tab-widgets
+KulkarniKaustubh/fzf-dir-navigator
+junegunn/fzf-git.sh kind:clone
+urbainvaes/fzf-marks
+joshskidmore/zsh-fzf-history-search
+mafredri/zsh-async
+seletskiy/zsh-fuzzy-search-and-edit
+redxtech/zsh-fzf-utils
+marlonrichert/zsh-autocomplete
+
+0b10/cheatsheet
+MichaelAquilina/zsh-you-should-use
+greymd/tmux-xpanes
+hlissner/zsh-autopair
+reegnz/jq-zsh-plugin
+fdellwing/zsh-bat
+
+zdharma-continuum/zsh-diff-so-fancy
+lincheney/fzf-tab-completion kind:zsh path:zsh
+
+zsh-users/zsh-completions path:src kind:fpath
+zsh-users/zsh-history-substring-search kind:defer
+zsh-users/zsh-autosuggestions kind:defer
+zdharma-continuum/fast-syntax-highlighting kind:defer
+
+belak/zsh-utils path:completion

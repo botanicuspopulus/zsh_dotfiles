@@ -1,0 +1,119 @@
+# Antidote
+zstyle :plugin:zsh-completion-generator programs cat xattr
+
+zstyle ':antidote:bundle' file ${ZDOTDIR:-~}/.zplugins
+zstyle ':antidote:static' file ${ZDOTDIR:-~}/.zplugins.zsh
+zstyle ':antidote:bundle' use-friendly-names 'yes'
+zstyle ':antidote:plugin:*' defer-options '-p'
+
+# fzf-tab
+zstyle ':fzf-tab:complete:_zlua:*' query-string input # autocomplete only with zlua
+zstyle ':fzf-tab:complete:kill:argument-rest' fzf-preview 'ps --pid=$word -o cmd --no-headers -w -w'
+zstyle ':fzf-tab:complete:kill:argument-rest' fzf-flags '--preview-window=down:3:wrap'
+zstyle ':fzf-tab:complete:kill:*' popup-pad 0 3 
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
+zstyle ':fzf-tab:complete:cd:*' popup-pad 30 0
+zstyle ':fzf-tab:*' fzf-flags --color=bg+:23
+zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
+zstyle ':fzf-tab:*' switch-group ',' '.'
+
+bindkey -M viins '\C-i' complete-word
+
+zstyle ':zel:*-word-shell' word-style shell
+
+zle -N forward-word-shell forwad-word-match
+zle -N backward-word-shell backward-word-match
+
+zstyle ':completion::complete:*' use-cache 1
+
+# Allow completion to expand around [._-], for example:
+# .z.d [TAB] -> .zsh.d
+# m-s [TAB] -> markdown-soma
+# M_A [TAB] -> Massive_Attack
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*:git-checkout:*' sort false
+zstyle ':completion:*' file-sort modification
+zstyle ':completion:*:exa' sort false
+zstyle ':completion:files' sort false
+
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*:descriptions' format '%B%d%b'
+zstyle ':completion:*:messages' format '%d'
+zstyle ':completion:*:warnings' format 'No matches for: %d'
+zstyle ':completion:*' group-name ''
+
+# Note these need functions to be defined
+zstyle ':completion:*' completer _oldlist _expand _force_rehash _complete
+zstyle ':completion:*' completer _expand _force_rehash _complete _ignored
+
+# Group completions by type (file, external command, etc)
+zstyle ':completion:*:matches' group 'yes'
+
+# Don't mess up url passing as arguments
+zstyle ':urlglobber' url-other-schema
+
+# generate descriptions with magic
+zstyle ':completion:*' auto-description 'specify: %d'
+
+# Don't prompt for a huge list, page it!
+zstyle ':completion:*:default' list-prompt '%S%M matches %s'
+
+# Don't prompt for a huge list, menu it!
+zstyle ':completion:*:default' menu 'select=0'
+
+# Have the newer files last so I see them first
+zstyle ':completion:*' file-sort modification reverse
+
+# Color code completion!!!
+zstyle ':completion:*' list-colors "=(#b) #([0-9]#)*=36=31"
+
+# Don't tab complete hosts (slow and if you have ad-blockin in your hosts files annoying)
+zstyle ':completion:*' hosts off
+
+unsetopt LIST_AMBIGUOUS
+setopt COMPLETE_IN_WORD
+
+# Seperate man page sections
+zstyle ':completion:*:manuals' separate-sections true
+
+zstyle ':completion:*' list-separator ''
+
+# More errors allowed for large words and fewer for small words
+zstyle ':completion:*:approximate:*' max-errors "reply=(  $((($#PREFIX + $#SUFFIX) / 3))  )"
+
+# Errors format
+zstyle ':completion:*:corrections' format '%B%d (errors %e)%b'
+zstyle ':completion:*:correct:*' insert-unambiguous true
+zstyle ':completion:*:correct:*' original true
+
+# Don't complete stuff already on the line
+zstyle ':completion::*:(rm|vi):*' ignore-line true
+
+# Don't complete directory that we are already in (../here)
+zstyle ':completion:*' ignore-parents parent pwd
+
+zstyle ':completion::approximate*:*' prefix-needed false
+
+# make kill way awesome
+zstyle ':completion:*:processes' command 'ps -au$USER -o pid,time,cmd|grep -v "ps -au$USER -o pid,time,cmd"'
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)[ 0-9:]#([^ ]#)*=01;30=01;31=01;38'
+
+### Autosuggest settings
+export ZSH_AUTOSUGGEST_USE_ASYNC=1
+export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=100
+
+# Autosuggest highlight colour
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#7c4fef,bold,underline"
+
+# Autosuggestions from history, if none use the completion engine
+export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+
+# Accept autosuggestions with shift+tab - I use this EVERY day
+bindkey '^I' complete-word        # tab         | complete
+bindkey '^[[Z' autosuggest-accept # shift + tab | autosuggest
+
+zstyle :zle:edit-command-line editor nvim
+
+if [[ -r $DOTFILES/local/zsh/zstyles.local.zsh ]]; then
+  . $DOTFILES/local/zsh/zstyles.local.zsh
+fi
