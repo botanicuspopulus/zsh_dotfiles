@@ -19,15 +19,42 @@ if [[ -n "$ZSH_VERSION" ]]; then
   unset index
 fi
 
+if (( $+commands[bat] )); then
+  tf() { tail -f "$1" | bat --paging=never -l log; }
+fi
+
+if (( $+commands[btm] )); then
+  alias htop='btm'
+fi
+
+if (( $+commands[fd] )); then
+  alias fdd='fd --type=directory'
+  alias fde='fd --type=executable'
+  alias fdf='fd --type=file'
+  alias fds='fd --type=symlink'
+fi
+
+
+chmod_files() {
+  fdf . -X chmod "$1" {}
+}
+
+chown_files() {
+  fdf . -X chown "$1" {}
+}
+
+chown_dirs() {
+  fdd . -X chown "$1" {}
+}
+
 # single character shortcuts - be sparing!
 alias _=sudo
-alias g=git
 
 # mask built-ins with better defaults
 alias ping='ping -c 5'
 alias vi=vim
 alias nv=nvim
-alias grep="command grep --exclude-dir={.git,.vscode}"
+alias grep="rg"
 
 # directories
 alias secrets="cd ${XDG_DATA_HOME:=~/.local/share}/secrets"
@@ -88,9 +115,20 @@ alias setjavahome="export JAVA_HOME=\`/usr/libexec/java_home\`"
 alias t="todo.sh"
 alias todos="$VISUAL $HOME/Desktop/todo.txt"
 
-#
-# noexpand
+# Exa aliases
+common_exa_flags='--icons --git'
+additional_exa_flags='--time-style --color-scale'
+alias ls='exa --icons'                                                    # ls
+alias l='exa -lbF ${common_exa_flags}'                                    # list, size, type, git
+alias ll='exa -lbGF ${common_exa_flags}'                                  # long list
+alias llm='exa -lbGd ${common_exa_flags} --sort=modified'                 # long list, modified date sort
+alias la='exa -lbhHigUmuSa ${common_exa_flags} ${additional_exa_flags}'   # all list
+alias la='exa -lbhHigUmuSa@ ${common_exa_flags} ${additional_exa_flags}'  # all + extended list
 
+alias lS='exa -1 --icons'
+alias lt='exa --tree --level=2'
+
+# noexpand
 noexpand_aliases=(
   gpg
   grep

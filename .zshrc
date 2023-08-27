@@ -20,7 +20,6 @@ for z in $ZDOTDIR/conf.d/*.zsh; do
   source "$z"
 done
 
-
 autoenv_activate="$HOME/.autoenv/activate.sh"
 if [[ -e "$autoenv_activate" ]]; then
   source "$autoenv_activate"
@@ -29,6 +28,8 @@ fi
 eval "$(direnv hook zsh)"
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
+
+source "$HOME/.asdf/asdf.sh"
 
 bindkey '^I' fzf_completion
 

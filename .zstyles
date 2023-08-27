@@ -1,6 +1,10 @@
 # Antidote
 zstyle :plugin:zsh-completion-generator programs cat xattr
 
+bindkey -M menuselect '^o' accept-and-infer-next-history
+
+zstyle ':completion:*:*:*:*:*' menu select
+
 zstyle ':antidote:bundle' file ${ZDOTDIR:-~}/.zplugins
 zstyle ':antidote:static' file ${ZDOTDIR:-~}/.zplugins.zsh
 zstyle ':antidote:bundle' use-friendly-names 'yes'
@@ -41,6 +45,10 @@ zstyle ':completion:*:descriptions' format '%B%d%b'
 zstyle ':completion:*:messages' format '%d'
 zstyle ':completion:*:warnings' format 'No matches for: %d'
 zstyle ':completion:*' group-name ''
+
+zstyle ':completion:*' list-dirs-first true
+zstyle ':completion:*' menu true=long select=long
+
 
 # Note these need functions to be defined
 zstyle ':completion:*' completer _oldlist _expand _force_rehash _complete

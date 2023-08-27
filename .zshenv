@@ -6,20 +6,34 @@ export XDG_DATA_HOME=$HOME/.local/share
 export XDG_STATE_HOME=$HOME/.local/state
 export XDG_RUNTIME_DIR=$HOME/.xdg
 
-export BROWSER=wslview
-export ANTIDOTE_HOME=${XDG_CACHE_HOME:=~/.cache}/repos
+if (( $+commands[delta] )); then
+  export GIT_PAGER=delta
+fi
 
-export CHEAT_CONFIG_PATH=$HOME/.config/cheat/conf.yml
-export CHEAT_USE_FZF=true
+# if (( $+commands[vivid] )); then
+#   export LS_COLORS="$(vivid generate tokyonight_night)"
+# fi
 
-export PAGER_PATH=$HOME/.local/bin
+export BAT_PAGER="less -Rf"
+export PAGER="less"
+
+if (( $+commands[rg] )); then
+  export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME:-$HOME/.config}/ripgrep/ripgreprc"
+fi
 
 # Custom
 export DOTFILES=$XDG_CONFIG_HOME/dotfiles
 export REPO_HOME=$XDG_CACHE_HOME/repos
 export ANTIDOTE_HOME=$REPO_HOME
 
-typeset -gU fpath path cdpath
+export ASDF_DIR=$HOME/.asdf
+export ASDF_DATA_DIR=$ASDF_DIR
+export ASDF_CONFIG_FILE=$XDG_CONFIG_HOME/asdf/.asdfrc
+
+export CHEAT_CONFIG_PATH=$XDG_CONFIG_HOME/cheat/conf.yml
+export CHEAT_USE_FZF=true
+
+export BROWSER=wslview
 
 if (( $+commands[nvim] )); then
   export EDITOR='nvim'
@@ -41,29 +55,20 @@ typeset -gU cdpath fpath path
 
 # Set the list of directories that zsh uses to search for programs
 path=(
+  $HOME/.local/bin(N)
   $HOME/{,s}bin(N)
+  $HOME/.cargo/bin(N)
   $HOME/.gem/ruby/*/bin(N)
   $HOME/go/bin(N)
-  $HOME/.local/bin(N)
   /opt/local/{,s}bin(N)
   /usr/local/{,s}bin(N)
   $path
 )
 
-# # ~/.local/bin should take precedence
-# if ! (( ${path[(I)$HOME/.local/bin]} )); then
-#   path=( $HOME/.local/bin $path )
-# fi
-
-# rust (cargo)
-if [ -d $HOME/.cargo/bin ]; then
-  path=( $path $HOME/.cargo/bin )
-fi
-
 # Set the default less options
 # Mouse-wheel scrolling has been disabled by -X (disable screen clearin)
 # Remove -X and -F (exit if the content fits on one screen) to enable it
-export LESS='-F -g -i -M -R -S -w -X -z-4'
+# export LESS='-F -g -i -M -R -S -w -X -z-4'
 
 # Set the less input preprocessor
 if (( $+commands[lesspipe.sh] )); then
@@ -79,7 +84,12 @@ if [[ -d "$TMPDIR" ]]; then
 fi
 
 # Custom config directory
-fpath=(${ZDOTDIR:-$HOME}/.zsh/functions ~/.local/share/zsh/site-function $fpath)
+fpath=(
+  ${ZDOTDIR:-$HOME}/.zsh/functions
+  $XDG_DATA_HOME/zsh/site-function
+  $ASDF_DIR/completions
+  $fpath
+)
 
 # Disable dot files in archive
 export COPYFILE_DISABLE=true
@@ -87,5 +97,3 @@ export COPYFILE_DISABLE=true
 if [ -f "$HOME/.zshenv.local" ]; then
   source "$HOME/.zshenv.local"
 fi
-
-

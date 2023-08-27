@@ -13,7 +13,9 @@ else
 fi
 
 export FZF_DEFAULT_OPTS='
+--ansi
 --height 50% --min-height=30 --layout=reverse
+--bind="ctrl-a:select-all"
 --bind="ctrl-y:execute-silent(printf {} | cut -f 2- | pbcopy)"
 --bind=ctrl-u:preview-half-page-up
 --bind=ctrl-d:preview-half-page-down
@@ -21,7 +23,11 @@ export FZF_DEFAULT_OPTS='
 --color=fg:#c0caf5,bg:#1a1b26,hl:#bb9af7
 --color=fg+:#c0caf5,bg+:#1a1b26,hl+:#7dcfff
 --color=info:#7aa2f7,prompt:#7dcfff,pointer:#7dcfff 
---color=marker:#9ece6a,spinner:#9ece6a,header:#9ece6a'
+--color=marker:#9ece6a,spinner:#9ece6a,header:#9ece6a
+--info=inline
+--layout=reverse
+--multi'
+
 
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
 export FZF_CTRL_T_OPTS="--preview='bat --style=numbers --color=always {}'"

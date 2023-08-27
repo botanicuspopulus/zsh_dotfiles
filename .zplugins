@@ -64,8 +64,6 @@ z-shell/H-S-MW
 
 unixorn/git-extra-commands
 
-DarrinTisdale/zsh-aliases-exa
-
 IngoMeyer441/zsh-easy-motion
 
 laggardkernel/zsh-thefuck
@@ -88,7 +86,6 @@ hlissner/zsh-autopair
 reegnz/jq-zsh-plugin
 fdellwing/zsh-bat
 
-zdharma-continuum/zsh-diff-so-fancy
 lincheney/fzf-tab-completion kind:zsh path:zsh
 
 zsh-users/zsh-completions path:src kind:fpath
