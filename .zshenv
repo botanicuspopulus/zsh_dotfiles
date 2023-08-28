@@ -85,9 +85,10 @@ fi
 
 # Custom config directory
 fpath=(
-  ${ZDOTDIR:-$HOME}/.zsh/functions
+  ${ZDOTDIR:-$HOME}/functions
   $XDG_DATA_HOME/zsh/site-function
   $ASDF_DIR/completions
+  ${ZDOTDIR:-HOME}/completions
   $fpath
 )
 
