@@ -20,12 +20,6 @@ ohmyzsh/ohmyzsh path:plugins/encode64
 ohmyzsh/ohmyzsh path:plugins/extract
 ohmyzsh/ohmyzsh path:plugins/fabric
 ohmyzsh/ohmyzsh path:plugins/fancy-ctrl-z
-ohmyzsh/ohmyzsh path:plugins/fzf
-ohmyzsh/ohmyzsh path:plugins/git
-ohmyzsh/ohmyzsh path:plugins/git-extras
-ohmyzsh/ohmyzsh path:plugins/gitfast
-ohmyzsh/ohmyzsh path:plugins/git-lfs
-ohmyzsh/ohmyzsh path:plugins/gitignore
 ohmyzsh/ohmyzsh path:plugins/history
 ohmyzsh/ohmyzsh path:plugins/jsontools
 ohmyzsh/ohmyzsh path:plugins/magic-enter
@@ -41,58 +35,65 @@ ohmyzsh/ohmyzsh path:plugins/pyenv
 ohmyzsh/ohmyzsh path:plugins/shell-proxy
 ohmyzsh/ohmyzsh path:plugins/sudo
 ohmyzsh/ohmyzsh path:plugins/tig
-ohmyzsh/ohmyzsh path:plugins/tmux
-ohmyzsh/ohmyzsh path:plugins/tmuxinator
 ohmyzsh/ohmyzsh path:plugins/urltools
 ohmyzsh/ohmyzsh path:plugins/vi-mode
 ohmyzsh/ohmyzsh path:plugins/virtualenv
 ohmyzsh/ohmyzsh path:plugins/virtualenvwrapper
 ohmyzsh/ohmyzsh path:plugins/web-search
-ohmyzsh/ohmyzsh path:plugins/zoxide
 ohmyzsh/ohmyzsh path:plugins/zsh-navigation-tools
 ohmyzsh/ohmyzsh path:plugins/zsh-interactive-cd
 
-zsh-vi-more/vi-motions
 
-romkatv/zsh-bench kind:path
 mattmc3/zman
 
 casonadams/bitwarden-cli
 
 Valiev/almostontop
 
+ohmyzsh/ohmyzsh path:plugins/zoxide
+fdw/ranger-zoxide
+
 z-shell/F-Sy-H
 z-shell/H-S-MW
 
 unixorn/git-extra-commands
+ohmyzsh/ohmyzsh path:plugins/git
+ohmyzsh/ohmyzsh path:plugins/git-extras
+ohmyzsh/ohmyzsh path:plugins/gitfast
+ohmyzsh/ohmyzsh path:plugins/git-lfs
+ohmyzsh/ohmyzsh path:plugins/gitignore
 
-IngoMeyer441/zsh-easy-motion
-
-laggardkernel/zsh-thefuck
-
+ohmyzsh/ohmyzsh path:plugins/fzf
 Aloxaf/fzf-tab
 tom-power/fzf-tab-widgets
 KulkarniKaustubh/fzf-dir-navigator
 junegunn/fzf-git.sh kind:clone
 urbainvaes/fzf-marks
 joshskidmore/zsh-fzf-history-search
+lincheney/fzf-tab-completion kind:zsh path:zsh
+
 mafredri/zsh-async
 seletskiy/zsh-fuzzy-search-and-edit
 redxtech/zsh-fzf-utils
 marlonrichert/zsh-autocomplete
-
-0b10/cheatsheet
-MichaelAquilina/zsh-you-should-use
-greymd/tmux-xpanes
-hlissner/zsh-autopair
-reegnz/jq-zsh-plugin
-fdellwing/zsh-bat
-
-lincheney/fzf-tab-completion kind:zsh path:zsh
-
 zsh-users/zsh-completions path:src kind:fpath
 zsh-users/zsh-history-substring-search kind:defer
 zsh-users/zsh-autosuggestions kind:defer
 zdharma-continuum/fast-syntax-highlighting kind:defer
+laggardkernel/zsh-thefuck
 
 belak/zsh-utils path:completion
+
+zsh-vi-more/vi-motions
+ohmyzsh/ohmyzsh path:plugins/tmux
+ohmyzsh/ohmyzsh path:plugins/tmuxinator
+IngoMeyer441/zsh-easy-motion
+greymd/tmux-xpanes
+
+0b10/cheatsheet
+MichaelAquilina/zsh-you-should-use
+
+hlissner/zsh-autopair
+reegnz/jq-zsh-plugin
+fdellwing/zsh-bat
+

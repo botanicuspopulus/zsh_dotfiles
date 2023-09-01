@@ -16,7 +16,8 @@ autoload zmv
 [[ -r $ZDOTDIR/conf.d/local.zsh ]] && source $ZDOTDIR/conf.d/local.zsh
 [[ -r $ZDOTDIR/.zshrc.local ]] && source $ZDOTDIR/.zshrc.local
 
-autoload -U compinit && compinit
+autoload -U compinit 
+compinit -d $ZDOTDIR/.zcompdump
 
 for z in $ZDOTDIR/conf.d/*.zsh; do
   source "$z"

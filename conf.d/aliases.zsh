@@ -34,6 +34,9 @@ if (( $+commands[fd] )); then
   alias fds='fd --type=symlink'
 fi
 
+ranger() {
+  pipx run --spec ranger-fm ranger
+}
 
 chmod_files() {
   fdf . -X chmod "$1" {}
