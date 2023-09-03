@@ -6,6 +6,8 @@ export XDG_DATA_HOME=$HOME/.local/share
 export XDG_STATE_HOME=$HOME/.local/state
 export XDG_RUNTIME_DIR=$HOME/.xdg
 
+export FZF_BASE=$ASDF_DIR/installs/fzf/0.42.0/shell
+
 if (( $+commands[delta] )); then
   export GIT_PAGER=delta
 fi
