@@ -45,7 +45,6 @@ zstyle ':completion:files' sort false
 
 zstyle ':completion:*:*:*:*:*' menu select
 
-
 bindkey -M viins '\C-i' complete-word
 
 zstyle ':zel:*-word-shell' word-style shell

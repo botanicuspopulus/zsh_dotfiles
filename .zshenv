@@ -6,7 +6,7 @@ export XDG_DATA_HOME=$HOME/.local/share
 export XDG_STATE_HOME=$HOME/.local/state
 export XDG_RUNTIME_DIR=$HOME/.xdg
 
-export FZF_BASE=$ASDF_DIR/installs/fzf/0.42.0/shell
+export FZF_BASE=$ASDF_DIR/installs/fzf/0.42.0/
 
 if (( $+commands[delta] )); then
   export GIT_PAGER=delta
@@ -57,6 +57,7 @@ typeset -gU cdpath fpath path
 
 # Set the list of directories that zsh uses to search for programs
 path=(
+  $ASDF_DATA_DIR
   $HOME/.local/bin(N)
   $HOME/{,s}bin(N)
   $HOME/.cargo/bin(N)

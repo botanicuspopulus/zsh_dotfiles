@@ -122,11 +122,11 @@ alias todos="$VISUAL $HOME/Desktop/todo.txt"
 common_exa_flags='--icons --git'
 additional_exa_flags='--time-style --color-scale'
 alias ls='exa --icons'                                                    # ls
-alias l='exa -lbF ${common_exa_flags}'                                    # list, size, type, git
-alias ll='exa -lbGF ${common_exa_flags}'                                  # long list
-alias llm='exa -lbGd ${common_exa_flags} --sort=modified'                 # long list, modified date sort
-alias la='exa -lbhHigUmuSa ${common_exa_flags} ${additional_exa_flags}'   # all list
-alias la='exa -lbhHigUmuSa@ ${common_exa_flags} ${additional_exa_flags}'  # all + extended list
+alias l="exa -lbF ${common_exa_flags}"                                    # list, size, type, git
+alias ll="exa -lbGF ${common_exa_flags}"                                  # long list
+alias llm="exa -lbGd ${common_exa_flags} --sort=modified"                 # long list, modified date sort
+alias la="exa -lbhHigUmuSa ${common_exa_flags} ${additional_exa_flags}"   # all list
+alias la="exa -lbhHigUmuSa@ ${common_exa_flags} ${additional_exa_flags}"  # all + extended list
 
 alias lS='exa -1 --icons'
 alias lt='exa --tree --level=2'
