@@ -1,10 +1,11 @@
-export ZDOTDIR=~/.config/zsh
 
 export XDG_CONFIG_HOME=$HOME/.config
 export XDG_CACHE_HOME=$HOME/.cache
 export XDG_DATA_HOME=$HOME/.local/share
 export XDG_STATE_HOME=$HOME/.local/state
 export XDG_RUNTIME_DIR=$HOME/.xdg
+
+export ZDOTDIR=${XDG_CONFIG_HOME:-$HOME/.config}/zsh
 
 if (( $+commands[delta] )); then
   export GIT_PAGER=delta
@@ -14,7 +15,10 @@ fi
 #   export LS_COLORS="$(vivid generate tokyonight_night)"
 # fi
 
-export BAT_PAGER="less -Rf"
+if (( $+commands[bat] )); then
+  export BAT_PAGER="less -Rf"
+fi
+
 export PAGER="less"
 
 if (( $+commands[rg] )); then
@@ -22,12 +26,14 @@ if (( $+commands[rg] )); then
 fi
 
 # Custom
-export DOTFILES=$XDG_CONFIG_HOME/dotfiles
-export REPO_HOME=$XDG_CACHE_HOME/repos
+export DOTFILES=$HOME/dotfiles
+export REPO_HOME=${XDG_CACHE_HOME:-$HOME}/repos
 export ANTIDOTE_HOME=$REPO_HOME
 
-export CHEAT_CONFIG_PATH=$XDG_CONFIG_HOME/cheat/conf.yml
-export CHEAT_USE_FZF=true
+if (( $+commands[cheat] )); then
+  export CHEAT_CONFIG_PATH=${XDG_CONFIG_HOME:-$HOME}/cheat/conf.yml
+  export CHEAT_USE_FZF=true
+fi
 
 if (( $+commands[nvim] )); then
   export EDITOR='nvim'
@@ -51,11 +57,7 @@ typeset -gU cdpath fpath path
 path=(
   $HOME/.local/bin(N)
   $HOME/{,s}bin(N)
-  $HOME/.cargo/bin(N)
-  $HOME/.gem/ruby/*/bin(N)
-  $HOME/go/bin(N)
-  /opt/local/{,s}bin(N)
-  /usr/local/{,s}bin(N)
+  /{opt,usr}/local/{,s}bin(N)
   $path
 )
 
@@ -72,9 +74,7 @@ fi
 # Place to put temp files
 if [[ -d "$TMPDIR" ]]; then
   export TMPPREFIX="${TMPDIR%/}/zsh"
-  if [[ ! -d "$TMPPREFIX" ]]; then
-    mkdir -p "$TMPPREFIX"
-  fi
+  [[ ! -d "$TMPPREFIX" ]] || mkdir -p "$TMPPREFIX"
 fi
 
 # Custom config directory
