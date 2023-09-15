@@ -1,12 +1,13 @@
 # Antidote
 zstyle :plugin:zsh-completion-generator programs cat xattr
 
-bindkey -M menuselect '^o' accept-and-infer-next-history
-
 # Don't prompt for a huge list, page it!
+unsetopt MENU_COMPLETE # Do not auto select the first completion entry
 unsetopt LIST_AMBIGUOUS
 unsetopt FLOWCONTROL
+setopt AUTO_MENU # show completion menu on successive tab press
 setopt COMPLETE_IN_WORD
+setopt ALWAYS_TO_END
 
 zmodload -i zsh/complist
 
@@ -14,6 +15,9 @@ zstyle ':antidote:bundle' file ${ZDOTDIR:-~}/.zplugins
 zstyle ':antidote:static' file ${ZDOTDIR:-~}/.zplugins.zsh
 zstyle ':antidote:bundle' use-friendly-names 'yes'
 zstyle ':antidote:plugin:*' defer-options '-p'
+
+bindkey -M menuselect '^o' accept-and-infer-next-history
+zstyle ':completion:*:*:*:*:*' menu select
 
 # Note these need functions to be defined
 zstyle ':completion:*' completer _oldlist _expand _force_rehash _complete _match _approximate _ignored
@@ -43,8 +47,6 @@ zstyle ':completion:*:exa' sort false
 zstyle ':completion:*:git-checkout:*' sort false
 zstyle ':completion:files' sort false
 
-zstyle ':completion:*:*:*:*:*' menu select
-
 bindkey -M viins '\C-i' complete-word
 
 zstyle ':zel:*-word-shell' word-style shell
@@ -72,7 +74,7 @@ zstyle ':completion:*' list-colors "=(#b) #([0-9]#)*=36=31"
 # Don't tab complete hosts (slow and if you have ad-blockin in your hosts files annoying)
 zstyle ':completion:*' hosts off
 
-zstyle ':completion:*' list-separator ''
+zstyle ':completion:*' list-separator ''
 
 # disable named-directories autocompletion
 zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
@@ -92,6 +94,46 @@ zstyle ':completion::*:(rm|vi):*' ignore-line true
 zstyle ':completion:*:processes' command 'ps -au$USER -o pid,time,cmd|grep -v "ps -au$USER -o pid,time,cmd"'
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)[ 0-9:]#([^ ]#)*=01;30=01;31=01;38'
 
+# Case insensitive (all), partial-word and substring completion
+if [[ "$CASE_SENSITIVE" = true ]]; then
+  zstyle ':completion:*' matcher-list 'r:\=*' 'l:|=* r:|=*'
+else
+  if [[ "$HYPHEN_INSENSITIVE" = true ]]; then
+    zstyle ':completion:*' matcher-list 'm:{a-zA-Z-_}={A-Za-z_-}' 'r:|=*' 'l:|=* r:|=*'
+  else
+    zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
+  fi
+fi
+unset CASE_SENSITIVE HYPHEN_INSENSITIVE
+
+# Don't complete uninteresting users
+zstyle ':completion:*:*:*:users' ignored-patterns \
+         adm amanda apache at avahi avahi-autoipd beaglidx bin cacti canna \
+         clamav daemon dbus distcache dnsmasq dovecot fax ftp games gdm \
+         gkrellmd gopher hacluster haldaemon hal hsqldb ident junkbust kdm \
+         ldap lp mail mailman mailnull man messagebus mldonkey mysql nagios \
+         named netdump news nfsnobody nobody nscd ntp nut nx obsrun openvpn \
+         operator pcap polkid postfix postgres privoxy pulse pvm quagga radvd \
+         rpc rpcuser rpm rtkit scard shutdown squid sshd statd svn sync tftp \
+         usbmux uucp vcsa wwwrun xfs '_*'
+
+# Unless absolutely needed
+zstyle '*' single-ignored show
+
+if [[ $COMPLETION_WAITING_DOTS = true ]]; then
+  expand-or-complete-with-dots() {
+# Toggle line wrapping off and back on again
+    [[ -n "$terminfo[rmam]" && -n "$terminfo[smam]" ]] && echoti rmam
+    print -Pn "%{%F{red......%f%}"
+    [[ -n "$terminfo[rmam]" && -n "$terminfo[smam]" ]] && echoti smam
+
+    zle expand-or-complete
+    zle redisplay
+  }
+  zle -N expand-or-complete-with-dots
+  bindkey "^I" expand-or-complete-with-dots
+fi
+
 # fzf-tab
 zstyle ':fzf-tab:complete:_zlua:*' query-string input # autocomplete only with zlua
 zstyle ':fzf-tab:complete:kill:argument-rest' fzf-preview 'ps --pid=$word -o cmd --no-headers -w -w'
@@ -106,13 +148,9 @@ zstyle ':fzf-tab:*' switch-group ',' '.'
 # Don't mess up url passing as arguments
 zstyle ':urlglobber' url-other-schema
 
-
 ### Autosuggest settings
 export ZSH_AUTOSUGGEST_USE_ASYNC=1
 export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=100
-
-# Autosuggest highlight colour
-export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#7c4fef,bold,underline"
 
 # Autosuggestions from history, if none use the completion engine
 export ZSH_AUTOSUGGEST_STRATEGY=(history completion)

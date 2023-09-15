@@ -32,7 +32,6 @@ eval "$(direnv hook zsh)"
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
 
-source "$HOME/.asdf/asdf.sh"
 
 bindkey '^I' fzf_completion
 

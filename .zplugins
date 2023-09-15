@@ -5,7 +5,6 @@ ohmyzsh/ohmyzsh path:plugins/aliases
 ohmyzsh/ohmyzsh path:plugins/alias-finder
 ohmyzsh/ohmyzsh path:plugins/ansible
 ohmyzsh/ohmyzsh path:plugins/asdf
-ohmyzsh/ohmyzsh path:plugins/autoenv
 ohmyzsh/ohmyzsh path:plugins/command-not-found
 ohmyzsh/ohmyzsh path:plugins/common-aliases
 ohmyzsh/ohmyzsh path:plugins/compleat
@@ -83,7 +82,7 @@ laggardkernel/zsh-thefuck
 belak/zsh-utils path:completion
 
 zsh-vi-more/vi-motions
-ohmyzsh/ohmyzsh path:plugins/tmux
+# ohmyzsh/ohmyzsh path:plugins/tmux
 ohmyzsh/ohmyzsh path:plugins/tmuxinator
 IngoMeyer441/zsh-easy-motion
 greymd/tmux-xpanes

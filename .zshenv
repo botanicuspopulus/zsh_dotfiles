@@ -6,8 +6,6 @@ export XDG_DATA_HOME=$HOME/.local/share
 export XDG_STATE_HOME=$HOME/.local/state
 export XDG_RUNTIME_DIR=$HOME/.xdg
 
-export FZF_BASE=$ASDF_DIR/installs/fzf/0.42.0/
-
 if (( $+commands[delta] )); then
   export GIT_PAGER=delta
 fi
@@ -28,14 +26,8 @@ export DOTFILES=$XDG_CONFIG_HOME/dotfiles
 export REPO_HOME=$XDG_CACHE_HOME/repos
 export ANTIDOTE_HOME=$REPO_HOME
 
-export ASDF_DIR=$HOME/.asdf
-export ASDF_DATA_DIR=$ASDF_DIR
-export ASDF_CONFIG_FILE=$XDG_CONFIG_HOME/asdf/.asdfrc
-
 export CHEAT_CONFIG_PATH=$XDG_CONFIG_HOME/cheat/conf.yml
 export CHEAT_USE_FZF=true
-
-export BROWSER=wslview
 
 if (( $+commands[nvim] )); then
   export EDITOR='nvim'
@@ -57,7 +49,6 @@ typeset -gU cdpath fpath path
 
 # Set the list of directories that zsh uses to search for programs
 path=(
-  $ASDF_DATA_DIR
   $HOME/.local/bin(N)
   $HOME/{,s}bin(N)
   $HOME/.cargo/bin(N)
@@ -90,7 +81,6 @@ fi
 fpath=(
   ${ZDOTDIR:-$HOME}/functions
   $XDG_DATA_HOME/zsh/site-function
-  $ASDF_DIR/completions
   ${ZDOTDIR:-HOME}/completions
   $fpath
 )
