@@ -37,7 +37,7 @@ bindkey '^I' fzf_completion
 
 [[ -z "$ZPROFRC" ]] || zprof
 
-[[ -z "$TMUX" ]] && tmux
+[[ -z "$TMUX" ]] && tmux -f $XDG_CONFIG_HOME/tmux/tmux.conf
 unset ZPROFRC zplugins
 true
 
