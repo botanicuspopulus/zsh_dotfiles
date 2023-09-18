@@ -1,8 +1,5 @@
 source ~/.cache/repos/marlonrichert/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 
-[[ -s "$ZPROFRC" ]] || zmodload zsh/zprof
-alias zprofrc="ZPROFRC=1 zsh"
-
 [[ -r $ZDOTDIR/.zstyles ]] && source $ZDOTDIR/.zstyles
 
 [[ -d $ANTIDOTE_HOME/mattmc3/antidote ]] ||
@@ -38,7 +35,5 @@ bindkey '^I' fzf_completion
 [[ -z "$ZPROFRC" ]] || zprof
 
 [[ -z "$TMUX" ]] && tmux -f $XDG_CONFIG_HOME/tmux/tmux.conf
-unset ZPROFRC zplugins
-true
 
-
+neofetch

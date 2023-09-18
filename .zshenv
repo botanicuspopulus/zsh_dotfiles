@@ -5,7 +5,13 @@ export XDG_DATA_HOME=$HOME/.local/share
 export XDG_STATE_HOME=$HOME/.local/state
 export XDG_RUNTIME_DIR=$HOME/.xdg
 
+export MOZ_ENABLE_WAYLAND=1
+export MOZ_WAYLAND_USE_VAAPI=1
+export MOZ_DISABLE_RDD_SANDBOX=1
+
 export ZDOTDIR=${XDG_CONFIG_HOME:-$HOME/.config}/zsh
+
+QT_PLATFORM_THEME=qt5ct
 
 if (( $+commands[delta] )); then
   export GIT_PAGER=delta
