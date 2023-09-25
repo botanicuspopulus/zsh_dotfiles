@@ -25,10 +25,14 @@ if [[ -e "$autoenv_activate" ]]; then
   source "$autoenv_activate"
 fi
 
+function zvm_config() {
+  ZVM_LINE_EDIT_MODE=ZVM_MODE_NORMAL
+  ZVM_READKEY_ENGINE=$ZVM_READKEY_ENGINE_NEX
+}
+
 eval "$(direnv hook zsh)"
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
-
 
 bindkey '^I' fzf_completion
 
