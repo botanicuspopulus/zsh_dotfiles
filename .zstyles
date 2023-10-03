@@ -1,98 +1,99 @@
+# vim ft=zsh
+
 # Antidote
 zstyle :plugin:zsh-completion-generator programs cat xattr
 
 # Don't prompt for a huge list, page it!
-unsetopt MENU_COMPLETE # Do not auto select the first completion entry
-unsetopt LIST_AMBIGUOUS
-unsetopt FLOWCONTROL
-setopt AUTO_MENU # show completion menu on successive tab press
-setopt COMPLETE_IN_WORD
-setopt ALWAYS_TO_END
+unsetopt MENU_COMPLETE    # Do not auto select the first completion entry
+unsetopt FLOW_CONTROL     # Disable start/stop characters in shell editor
+setopt AUTO_MENU          # show completion menu on successive tab press
+setopt AUTO_LIST          # Automatically list choices on ambigious completion
+setopt COMPLETE_IN_WORD   # Complete from both ends
+setopt ALWAYS_TO_END      # Move cursor to the end of the complete word
+setopt AUTO_PARAM_SLASH   # If completed parameter is a directtory, add a trailing slash
+setopt GLOBDOTS           # files beginning with a . be matched without explicitly specifying the dot
 
 zmodload -i zsh/complist
 
-zstyle ':antidote:bundle' file ${ZDOTDIR:-~}/.zplugins
-zstyle ':antidote:static' file ${ZDOTDIR:-~}/.zplugins.zsh
+zstyle ':antidote:bundle' file ${ZDOTDIR:-$HOME}/.zplugins
+zstyle ':antidote:static' file ${ZDOTDIR:-$HOME}/.zplugins.zsh
 zstyle ':antidote:bundle' use-friendly-names 'yes'
 zstyle ':antidote:plugin:*' defer-options '-p'
 
-bindkey -M menuselect '^o' accept-and-infer-next-history
-zstyle ':completion:*:*:*:*:*' menu select
+autoload -U compinit 
+compinit -d $ZDOTDIR/.zcompdump
 
-# Note these need functions to be defined
-zstyle ':completion:*' completer _oldlist _expand _force_rehash _complete _match _approximate _ignored
-zstyle ':completion:*:match:*' original only
-# More errors allowed for large words and fewer for small words
-zstyle ':completion:*:approximate:*' max-errors "reply=(  $((($#PREFIX + $#SUFFIX) / 3))  )"
+zstyle ':completion:*' menu select
+zstyle ':completion:*' completer _extensions _oldlist _complete _approximate _match _ignored _expand _force_rehash 
+zstyle ':completion:*' list-dirs-first true
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*' use-cache yes
+zstyle ':completion:*' complete-options true
+zstyle ':completion:*' file-sort modification reverse # Have the newer files last so I see them first
+zstyle ':completion:*' hosts off # Don't tab complete hosts (slow and if you have ad-blockin in your hosts files annoying)
+zstyle ':completion:*' squeeze-slashes true
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' list-separator '  '
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*' auto-description 'specify: %d' # generate descriptions with magic
+zstyle ':completion:*' format ' %F{yellow}-- %d --%f'
+zstyle ':completion:*:match:*' original only # Note these need functions to be defined
+zstyle ':completion:*:approximate:*' max-errors "reply=(  $((($#PREFIX + $#SUFFIX) / 3))  )" # More errors allowed for large words and fewer for small words
 zstyle ':completion:*:approximate*:*' prefix-needed false
 
-zstyle ':completion:*' verbose yes
-zstyle ':completion:*:descriptions' format '%B%d%b'
-zstyle ':completion:*:messages' format '%d'
-zstyle ':completion:*:warnings' format 'No matches for: %d'
-zstyle ':completion:*' group-name ''
+zstyle ':completion:*:descriptions' format '%F{yellow}-- %d --%f'
+zstyle ':completion:*:messages' format '%F{purple} -- %d --%f'
+zstyle ':completion:*:warnings' format '%F{red}-- no matches found --%f'
 
-zstyle ':completion:*' list-dirs-first true
-zstyle ':completion:*' menu true=long select=long
+# Errors format
+zstyle ':completion:*:corrections' format '%F{green}-- %d (errors: %e) --%f'
+zstyle ':completion:*:correct:*' insert-unambiguous true
+zstyle ':completion:*:correct:*' original true
 
-zstyle ':completion::complete:*' use-cache 1
+zstyle ':completion:*' list-colors "=(#b) #([0-9]#)*=36=31" # Color code completion!!!
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*:default' list-prompt '%S%M matches%s'
+zstyle ':completion:*:default' menu 'select=0' # Don't prompt for a huge list, menu it!
 
-# Allow completion to expand around [._-], for example:
-# .z.d [TAB] -> .zsh.d
-# m-s [TAB] -> markdown-soma
-# M_A [TAB] -> Massive_Attack
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
-zstyle ':completion:*' file-sort modification
-zstyle ':completion:*:exa' sort false
 zstyle ':completion:*:git-checkout:*' sort false
+
+zstyle ':completion:*:matches' group 'yes' # Group completions by type (file, external command, etc)
+zstyle ':completion:*:functions' ignored-patterns '(_*|pre(cmd|exec)|prompt_*)'  # ignores unavailable commands
+
+zstyle ':completion:*:(rm|vi|nv|vim|kill|diff):*' ignore-line other # Don't complete stuff already on the line
+zstyle ':completion:*rm:*' file-patterns '*:all-files'
+
+zstyle ':completion:*:(ssh|scp|rsync):*' tag-order 'hosts:-host:host hosts:-domain:domain hosts:-ip\ address *'
+zstyle ':completion:*:(scp|rsync):*' group-order users files all-files hosts-domain hosts-host hosts-ipaddr
+zstyle ':completion:*:ssh:*' group-order users hosts-domain hosts-host users hosts-ipaddr
+zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' loopback ip6-loopback localhost ip6-localhost broadcasthost
+zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.<->.<->' '^[-[:alnum:]]##(.[-[:alnum:]]##)##' '*@*'
+zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
+
+zstyle ':completion:*:manuals' separate-sections true # Separate man page sections
+zstyle ':completion:*:manuals.(^1*)' insert-sections true
+
+zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters # completion element sorting
+
+zstyle ':completion:*:processes' command 'ps -au$USER -o pid,time,cmd|grep -v "ps -au$USER -o pid,time,cmd"'
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)[ 0-9:]#([^ ]#)*=01;30=01;31=01;38'
+
+zstyle ':completion:*:eza' sort false
 zstyle ':completion:files' sort false
 
-bindkey -M viins '\C-i' complete-word
+zstyle ':completion:*:*:-command-:*:*' group-order alias builtins functions commands
+
+zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories # disable named-directories autocompletion
+zstyle ':completion:*:cd:*:directory-stack' menu yes select
+zstyle ':completion:*:-tilde-:*' group-order 'named-directories' 'path-directories' 'users' 'expand'
+
 
 zstyle ':zel:*-word-shell' word-style shell
 
 zle -N forward-word-shell forwad-word-match
 zle -N backward-word-shell backward-word-match
 
-# Group completions by type (file, external command, etc)
-zstyle ':completion:*:matches' group 'yes'
-
-# generate descriptions with magic
-zstyle ':completion:*' auto-description 'specify: %d'
-
-zstyle ':completion:*:default' list-prompt '%S%M matches %s'
-
-# Don't prompt for a huge list, menu it!
-zstyle ':completion:*:default' menu 'select=0'
-
-# Have the newer files last so I see them first
-zstyle ':completion:*' file-sort modification reverse
-
-# Color code completion!!!
-zstyle ':completion:*' list-colors "=(#b) #([0-9]#)*=36=31"
-
-# Don't tab complete hosts (slow and if you have ad-blockin in your hosts files annoying)
-zstyle ':completion:*' hosts off
-
-zstyle ':completion:*' list-separator ''
-
-# disable named-directories autocompletion
-zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
-
-# Seperate man page sections
-zstyle ':completion:*:manuals' separate-sections true
-
-# Errors format
-zstyle ':completion:*:corrections' format '%B%d (errors %e)%b'
-zstyle ':completion:*:correct:*' insert-unambiguous true
-zstyle ':completion:*:correct:*' original true
-
-# Don't complete stuff already on the line
-zstyle ':completion::*:(rm|vi):*' ignore-line true
-
 # make kill way awesome
-zstyle ':completion:*:processes' command 'ps -au$USER -o pid,time,cmd|grep -v "ps -au$USER -o pid,time,cmd"'
-zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)[ 0-9:]#([^ ]#)*=01;30=01;31=01;38'
 
 # Case insensitive (all), partial-word and substring completion
 if [[ "$CASE_SENSITIVE" = true ]]; then
@@ -117,8 +118,12 @@ zstyle ':completion:*:*:*:users' ignored-patterns \
          rpc rpcuser rpm rtkit scard shutdown squid sshd statd svn sync tftp \
          usbmux uucp vcsa wwwrun xfs '_*'
 
-# Unless absolutely needed
-zstyle '*' single-ignored show
+zstyle '*' single-ignored show  # Unless absolutely needed
+
+if [[ -s "$DOTFILES/neomutt/aliases" ]]; then
+  zstyle ':completion:*:mutt:*' menu yes select
+  zstyle ':completion:*:mutt:*' users ${${${(f)"$(<"$DOTFILES/neomutt/aliases")"}#alias[[:space:]]}%%[[:space:]]*}
+fi
 
 if [[ $COMPLETION_WAITING_DOTS = true ]]; then
   expand-or-complete-with-dots() {
@@ -134,19 +139,11 @@ if [[ $COMPLETION_WAITING_DOTS = true ]]; then
   bindkey "^I" expand-or-complete-with-dots
 fi
 
-# fzf-tab
-zstyle ':fzf-tab:complete:_zlua:*' query-string input # autocomplete only with zlua
-zstyle ':fzf-tab:complete:kill:argument-rest' fzf-preview 'ps --pid=$word -o cmd --no-headers -w -w'
-zstyle ':fzf-tab:complete:kill:argument-rest' fzf-flags '--preview-window=down:3:wrap'
-zstyle ':fzf-tab:complete:kill:*' popup-pad 0 3 
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
-zstyle ':fzf-tab:complete:cd:*' popup-pad 30 0
-zstyle ':fzf-tab:*' fzf-flags --color=bg+:23
-zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
-zstyle ':fzf-tab:*' switch-group ',' '.'
-
 # Don't mess up url passing as arguments
 zstyle ':urlglobber' url-other-schema
+
+# Environment Variables
+zstyle ':completion::*:(-command-|export):*' fake-parameters ${${${_comps[(I)-value-*]#*,}%%,*}:#-*-}
 
 ### Autosuggest settings
 export ZSH_AUTOSUGGEST_USE_ASYNC=1
@@ -155,11 +152,24 @@ export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=100
 # Autosuggestions from history, if none use the completion engine
 export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
-# Accept autosuggestions with shift+tab - I use this EVERY day
+zstyle :zle:edit-command-line editor nvim
+
+bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'k' vi-up-line-or-history
+bindkey -M menuselect 'j' vi-down-line-or-history
+bindkey -M menuselect 'l' vi-forward-char
+
+bindkey -M menuselect '^xi' vi-insert
+bindkey -M menuselect '^xg' clear-screen
+bindkey -M menuselect '^xh' accept-and-hold
+bindkey -M menuselect '^xn' accept-and-infer-next-history
+bindkey -M menuselect '^xu' undo
+
+bindkey -M viins '\C-i' complete-word
+
+# Accept autosuggestions with shift+tab
 bindkey '^I' complete-word        # tab         | complete
 bindkey '^[[Z' autosuggest-accept # shift + tab | autosuggest
-
-zstyle :zle:edit-command-line editor nvim
 
 if [[ -r $DOTFILES/local/zsh/zstyles.local.zsh ]]; then
   . $DOTFILES/local/zsh/zstyles.local.zsh

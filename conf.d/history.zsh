@@ -14,6 +14,11 @@ setopt APPEND_HISTORY
 unsetopt SHARE_HISTORY
 setopt NO_SHARE_HISTORY
 
-setopt HIST_IGNORE_ALL_DUPS
-setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_EXPIRE_DUPS_FIRST   # Allow duplicates, but expire older ones when exceeding HISTSIZE
+setopt HIST_IGNORE_ALL_DUPS     # Ignore duplicate commands
+setopt HIST_FIND_NO_DUPS        # Do not find duplicates in history
+setopt HIST_IGNORE_DUPS         # Ignore duplicate commands
+setopt HIST_IGNORE_SPACE        # Ignore entries starting with a space
+setopt HIST_REDUCE_BLANKS       # Leave no blanks
+setopt HIST_SAVE_NO_DUPS        # Do not save duplicates
 setopt HIST_VERIFY

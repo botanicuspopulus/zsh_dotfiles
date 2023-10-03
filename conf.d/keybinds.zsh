@@ -1,15 +1,3 @@
-# Make sure that the terminal is in application mode when zle is active, since values from $terminfo are only valid then
-if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
-  function zle-line-init() {
-    echoti smkx
-  }
-  function zle-line-finish() {
-    echoti rmkx
-  }
-  zle -N zle-line-init
-  zle -N zle-line-finish
-fi
-
 bindkey -e
 stty -ixon
 
@@ -18,9 +6,27 @@ bindkey -v
 bindkey '^Y' accept-and-hold
 bindkey '^Q' push-line-or-edit
 
+bindkey '^w' backward-kill-word
+bindkey '^h' backward-delete-char
+
+autoload -U history-search-end
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+
+bindkey '^p' history-substring-search-up
+bindkey '^n' history-substring-search-down
+bindkey '^a' beginning-of-line
+bindkey '^e' end-of-line
+bindkey '^k' kill-line
+bindkey '^F' forward-word
+bindkey '^B' backward-word
+
 # Search based on what you typed in already
 bindkey -M vicmd "//" history-beginning-search-backward
 bindkey -M vicmd "??" history-beginning-search-forward
+
+bindkey -M vicmd 'k' history-substring-search-up
+bindkey -M vicmd 'j' history-substring-search-down
 
 # This is killer.. try it!
 bindkey -M vicmd "q" push-line
@@ -28,24 +34,12 @@ bindkey -M vicmd "q" push-line
 # Push your line to the stack and run another command and then pop it back
 bindkey -M vicmd '^q' push-line
 
-bindkey '^F' forward-word
-bindkey '^B' backward-word
-
 bindkey '^X' create_completion
 
 # file rename magicks
 bindkey "^[m" copy-prev-shell-word
 
 bindkey -M vicmd ' ' vi-easy-motion
-
-bindkey '^?' backward-delete-char # [Backspace] - delete backward
-if [[ "${terminfo[kdch1]}" != "" ]]; then
-  bindkey "$terminfo[kdch1]}" delete-char # [Delete] - delete forward
-else
-  bindkey "^[[3~" delete-char
-  bindkey "^[3;5~" delete-char
-  bindkey "\e[3~" delete-char
-fi
 
 ### Fix slowness of pastes with zsh-syntax-highlighting
 # Still needed as of 2023-06-24!

@@ -26,15 +26,17 @@ if [[ -e "$autoenv_activate" ]]; then
 fi
 
 function zvm_config() {
-  ZVM_LINE_EDIT_MODE=ZVM_MODE_NORMAL
+  ZVM_LINE_INIT_MODE=$ZVM_MODE_NORMAL
   ZVM_READKEY_ENGINE=$ZVM_READKEY_ENGINE_NEX
 }
+
+xrdb ~/.Xresources
 
 eval "$(direnv hook zsh)"
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
 
-bindkey '^I' fzf_completion
+zmodload zsh/net/tcp
 
 [[ -z "$ZPROFRC" ]] || zprof
 

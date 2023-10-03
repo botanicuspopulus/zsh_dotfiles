@@ -32,32 +32,27 @@ if (( $+commands[fd] )); then
   alias fde='fd --type=executable'
   alias fdf='fd --type=file'
   alias fds='fd --type=symlink'
+
+  chmod_files() {
+    fdf . -X chmod "$1" {}
+  }
+
+  chown_files() {
+    fdf . -X chown "$1" {}
+  }
+
+  chown_dirs() {
+    fdd . -X chown "$1" {}
+  }
 fi
 
-ranger() {
-  pipx run --spec ranger-fm ranger
-}
-
-chmod_files() {
-  fdf . -X chmod "$1" {}
-}
-
-chown_files() {
-  fdf . -X chown "$1" {}
-}
-
-chown_dirs() {
-  fdd . -X chown "$1" {}
-}
 
 # single character shortcuts - be sparing!
 alias _=sudo
 
 # mask built-ins with better defaults
 alias ping='ping -c 5'
-alias vi=vim
 alias nv=nvim
-alias grep="rg"
 
 # directories
 alias secrets="cd ${XDG_DATA_HOME:=~/.local/share}/secrets"
@@ -65,7 +60,6 @@ alias secrets="cd ${XDG_DATA_HOME:=~/.local/share}/secrets"
 # fix typos
 alias get=git
 alias quit='exit'
-alias cd..='cd ..'
 alias zz='exit'
 
 # tar
@@ -94,7 +88,6 @@ alias urlencode='python3 -c "import sys, urllib.parse as ul; \
 # misc
 alias please=sudo
 alias zshrc='${EDITOR:-vim} "${ZDOTDIR:-$HOME}"/.zshrc'
-alias zbench='for i in {1..10}; do /usr/bin/time zsh -lic exit; done'
 alias cls="clear && printf '\e[3J'"
 
 # print things
@@ -119,17 +112,17 @@ alias t="todo.sh"
 alias todos="$VISUAL $HOME/Desktop/todo.txt"
 
 # Exa aliases
-common_exa_flags='--icons --git'
-additional_exa_flags='--time-style --color-scale'
-alias ls='exa --icons'                                                    # ls
-alias l="exa -lbF ${common_exa_flags}"                                    # list, size, type, git
-alias ll="exa -lbGF ${common_exa_flags}"                                  # long list
-alias llm="exa -lbGd ${common_exa_flags} --sort=modified"                 # long list, modified date sort
-alias la="exa -lbhHigUmuSa ${common_exa_flags} ${additional_exa_flags}"   # all list
-alias la="exa -lbhHigUmuSa@ ${common_exa_flags} ${additional_exa_flags}"  # all + extended list
+common_eza_flags='--icons --git'
+additional_eza_flags='--time-style --color-scale'
+alias ls='eza --icons'                                                    # ls
+alias l="eza -lbF ${common_eza_flags}"                                    # list, size, type, git
+alias ll="eza -lbGF ${common_eza_flags}"                                  # long list
+alias llm="eza -lbGd ${common_eza_flags} --sort=modified"                 # long list, modified date sort
+alias la="eza -lbhHigUmuSa ${common_eza_flags} ${additional_eza_flags}"   # all list
+alias la="eza -lbhHigUmuSa@ ${common_eza_flags} ${additional_eza_flags}"  # all + extended list
 
-alias lS='exa -1 --icons'
-alias lt='exa --tree --level=2'
+alias lS='eza -1 --icons'
+alias lt='eza --tree --level=2'
 
 # noexpand
 noexpand_aliases=(

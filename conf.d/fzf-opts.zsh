@@ -12,27 +12,28 @@ elif (( $+commands[ag] )); then
 else
 fi
 
-export FZF_DEFAULT_OPTS='
---ansi
---height 50% --min-height=30 --layout=reverse
---bind="ctrl-a:select-all"
---bind="ctrl-y:execute-silent(printf {} | cut -f 2- | pbcopy)"
---bind=ctrl-u:preview-half-page-up
---bind=ctrl-d:preview-half-page-down
---bind="ctrl-o:execute-silent(nvim {-1})"''
---color=fg:#c0caf5,bg:#1a1b26,hl:#bb9af7
---color=fg+:#c0caf5,bg+:#1a1b26,hl+:#7dcfff
---color=info:#7aa2f7,prompt:#7dcfff,pointer:#7dcfff 
---color=marker:#9ece6a,spinner:#9ece6a,header:#9ece6a
---info=inline
---layout=reverse
---multi'
+export FZF_DEFAULT_OPTS="--ansi \
+--height 50% --min-height=30 \
+--color=fg:#c0caf5,bg:#1a1b26,hl:#bb9af7 \
+--color=fg+:#c0caf5,bg+:#1a1b26,hl+:#7dcfff \
+--color=info:#7aa2f7,prompt:#7dcfff,pointer:#7dcfff \
+--color=marker:#9ece6a,spinner:#9ece6a,header:#9ece6a \
+--pointer  \
+--prompt ':: ' \
+--marker  \
+--layout=reverse \
+--info=inline \
+--border=rounded \
+--margin=1 \
+--padding=1 \
+--cycle \
+--multi"
 
 
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
 export FZF_CTRL_T_OPTS="--preview='bat --style=numbers --color=always {}'"
-export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND --type d"
-export FZF_ALT_C_OPTS="--preview='exa -T {}'"
+export FZF_ALT_C_COMMAND="fd --type d"
+export FZF_ALT_C_OPTS="--preview='eza --tree --color always --icons --level=2 --only-dirs {} | head -n 50'"
 export FZF_CTRL_R_OPTS="--preview='echo {} --preview-window=down:3:hidden:wrap --bind='?:toggle-preview'"
 
 export FZF_COMPLETION_OPTS='--border --info=inline'

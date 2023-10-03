@@ -4,7 +4,6 @@ ohmyzsh/ohmyzsh path:lib
 ohmyzsh/ohmyzsh path:plugins/aliases
 ohmyzsh/ohmyzsh path:plugins/alias-finder
 ohmyzsh/ohmyzsh path:plugins/ansible
-ohmyzsh/ohmyzsh path:plugins/asdf
 ohmyzsh/ohmyzsh path:plugins/command-not-found
 ohmyzsh/ohmyzsh path:plugins/common-aliases
 ohmyzsh/ohmyzsh path:plugins/compleat
@@ -19,6 +18,7 @@ ohmyzsh/ohmyzsh path:plugins/encode64
 ohmyzsh/ohmyzsh path:plugins/extract
 ohmyzsh/ohmyzsh path:plugins/fabric
 ohmyzsh/ohmyzsh path:plugins/fancy-ctrl-z
+ohmyzsh/ohmyzsh path:plugins/firewalld
 ohmyzsh/ohmyzsh path:plugins/history
 ohmyzsh/ohmyzsh path:plugins/jsontools
 ohmyzsh/ohmyzsh path:plugins/magic-enter
@@ -59,6 +59,9 @@ ohmyzsh/ohmyzsh path:plugins/git-extras
 ohmyzsh/ohmyzsh path:plugins/gitfast
 ohmyzsh/ohmyzsh path:plugins/git-lfs
 ohmyzsh/ohmyzsh path:plugins/gitignore
+egyptianbman/zsh-git-worktrees
+Schnouki/git-annex-zsh-completion kind:fpath
+alexiszamanidis/zsh-git-fzf
 
 ohmyzsh/ohmyzsh path:plugins/fzf
 Aloxaf/fzf-tab
@@ -68,6 +71,7 @@ junegunn/fzf-git.sh kind:clone
 urbainvaes/fzf-marks
 joshskidmore/zsh-fzf-history-search
 lincheney/fzf-tab-completion kind:zsh path:zsh
+
 
 mafredri/zsh-async
 seletskiy/zsh-fuzzy-search-and-edit

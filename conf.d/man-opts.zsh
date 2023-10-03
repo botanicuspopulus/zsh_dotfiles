@@ -1,9 +1,11 @@
 export MANOPT='--encoding=ascii --no-hyphenation --no-justification'
 
-MANPAGER='bat --color=always --language=man --style=grid --decorations=always'
-MANPAGER="sh -c 'col -bx | ansifilter | $MANPAGER'"
+if (( $+commands[bat] )); then
+  MANPAGER='bat --color=always --language=man --style=grid --decorations=always'
+  MANPAGER="sh -c 'col -bx | ansifilter | $MANPAGER'"
+  export MANPAGER
+fi
 
-export MANPAGER
 
 export MANROFFOPT="-c"
 
