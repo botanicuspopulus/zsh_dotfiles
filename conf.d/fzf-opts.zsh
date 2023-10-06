@@ -4,12 +4,19 @@
 # fzf-powered CTRL-R
 # Ctrl-T: setting ripgrep or fd as the default source for ctrl-T fzf
 if (( $+commands[rg] )); then
-  export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-messages --glob "!.git/"'
+  export FZF_DEFAULT_COMMAND='rg --hidden --follow --no-messages --glob "!.git/"'
 elif (( $+commands[fd] )); then
-  export FZF_DEFAULT_COMMAND='fd --type f'
+  export FZF_DEFAULT_COMMAND='fd --hidden --follow --type f'
 elif (( $+commands[ag] )); then
   export FZF_DEFAULT_COMMAND='ag --path-to-ignore ~/.ignore --hidden --nogroup -l .'
 else
+  export FZF_DEFAULT_COMMAND='find -L . -mindepth 1'
+fi
+
+if [[ -f /usr/share/fzf/completion.zsh ]]; then
+  source /usr/share/fzf/completion.zsh
+elif [[ -f $DOTFILES/fzf/shell/completion.zsh ]]; then
+  source $DOTFILES/fzf/shell/completion.zsh
 fi
 
 export FZF_DEFAULT_OPTS="--ansi \
@@ -29,10 +36,10 @@ export FZF_DEFAULT_OPTS="--ansi \
 --cycle \
 --multi"
 
-
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
+export FZF_ALT_C_COMMAND="fd --hidden --follow --type d"
+
 export FZF_CTRL_T_OPTS="--preview='bat --style=numbers --color=always {}'"
-export FZF_ALT_C_COMMAND="fd --type d"
 export FZF_ALT_C_OPTS="--preview='eza --tree --color always --icons --level=2 --only-dirs {} | head -n 50'"
 export FZF_CTRL_R_OPTS="--preview='echo {} --preview-window=down:3:hidden:wrap --bind='?:toggle-preview'"
 
@@ -110,10 +117,13 @@ s() {
 fzf-history-widget() {
   local selected num
   setopt localoptions noglobsubst noposixbuiltins pipefail 2> /dev/null
-  selected=( $(fc -rln 1 | FZF_DEFAULT_COMMAND="--height ${FZF_TMUX_HEIGHT:-40%} $FZF_DEFAULT_OPTS -n2..,.. -tiebreak=index --bind=ctrl-r:toggle-sort $FZF_CTRL_R_OPTS --query={(qqq)LBUFFER} +m" fzf) )
+  selected=( $(fc -rln 1 | FZF_DEFAULT_COMMAND="$FZF_DEFAULT_OPTS -n2..,.. -tiebreak=index --bind=ctrl-r:toggle-sort $FZF_CTRL_R_OPTS --query={(qqq)LBUFFER} +m" fzf) )
   local ret=$?
   if [ -n "$selected" ]; then
-    LBUFFER=$selected
+    num=$selected[1]
+    if [ -n "$num" ]; then
+      zle vi-fetch-history -n $num
+    fi
   fi
   zle reset-prompt
   return $ret

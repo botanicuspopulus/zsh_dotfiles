@@ -25,6 +25,7 @@ typeset -gU cdpath fpath path
 path=(
   $HOME/.local/bin(N)
   $HOME/perl5/bin(N)
+  $XDG_DATA_HOME/gem/ruby/3.0.0/bin(N)
   $HOME/{,s}bin(N)
   $DOTFILES/bin(N)
   /{opt,usr}/local/{,s}bin(N)

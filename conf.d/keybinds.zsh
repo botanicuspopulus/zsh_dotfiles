@@ -9,10 +9,6 @@ bindkey '^Q' push-line-or-edit
 bindkey '^w' backward-kill-word
 bindkey '^h' backward-delete-char
 
-autoload -U history-search-end
-zle -N history-beginning-search-backward-end history-search-end
-zle -N history-beginning-search-forward-end history-search-end
-
 bindkey '^p' history-substring-search-up
 bindkey '^n' history-substring-search-down
 bindkey '^a' beginning-of-line

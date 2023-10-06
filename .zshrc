@@ -10,9 +10,6 @@ antidote load
 
 autoload zmv
 
-[[ -r $ZDOTDIR/conf.d/local.zsh ]] && source $ZDOTDIR/conf.d/local.zsh
-[[ -r $ZDOTDIR/.zshrc.local ]] && source $ZDOTDIR/.zshrc.local
-
 autoload -U compinit 
 compinit -d $ZDOTDIR/.zcompdump
 
@@ -24,11 +21,6 @@ autoenv_activate="$HOME/.autoenv/activate.sh"
 if [[ -e "$autoenv_activate" ]]; then
   source "$autoenv_activate"
 fi
-
-function zvm_config() {
-  ZVM_LINE_INIT_MODE=$ZVM_MODE_NORMAL
-  ZVM_READKEY_ENGINE=$ZVM_READKEY_ENGINE_NEX
-}
 
 xrdb ~/.Xresources
 
@@ -43,3 +35,5 @@ zmodload zsh/net/tcp
 [[ -z "$TMUX" ]] && tmux -f $XDG_CONFIG_HOME/tmux/tmux.conf
 
 neofetch
+
+[[ -z "$HOME/.zshrc.local"]] && source "$HOME/.zshrc.local"
