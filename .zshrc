@@ -30,10 +30,8 @@ eval "$(zoxide init zsh)"
 
 zmodload zsh/net/tcp
 
-[[ -z "$ZPROFRC" ]] || zprof
-
 [[ -z "$TMUX" ]] && tmux -f $XDG_CONFIG_HOME/tmux/tmux.conf
 
 neofetch
 
-[[ -z "$HOME/.zshrc.local"]] && source "$HOME/.zshrc.local"
+[[ -r "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"

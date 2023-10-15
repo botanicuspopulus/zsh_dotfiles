@@ -75,7 +75,7 @@ zstyle ':completion:*:manuals.(^1*)' insert-sections true
 
 zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters # completion element sorting
 
-zstyle ':completion:*:processes' command 'ps -au$USER -o pid,time,cmd|grep -v "ps -au$USER -o pid,time,cmd"'
+zstyle ':completion:*:processes' command 'ps -au$USER -o pid,time,cmd | grep -v "ps -au$USER -o pid,time,cmd"'
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)[ 0-9:]#([^ ]#)*=01;30=01;31=01;38'
 
 zstyle ':completion:*:eza' sort false
@@ -154,7 +154,6 @@ bindkey -M viins '\C-i' complete-word
 
 # Accept autosuggestions with shift+tab
 bindkey '^I' complete-word        # tab         | complete
-bindkey '^[[Z' autosuggest-accept # shift + tab | autosuggest
 
 if [[ -r $DOTFILES/local/zsh/zstyles.local.zsh ]]; then
   . $DOTFILES/local/zsh/zstyles.local.zsh

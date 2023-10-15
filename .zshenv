@@ -11,13 +11,10 @@ export DOTFILES=$HOME/dotfiles
 export REPO_HOME=${XDG_CACHE_HOME:-$HOME}/repos
 export ANTIDOTE_HOME=$REPO_HOME
 
-if [[ -z "$LANG" ]]; then
-  export LANG='en_US.UTF-8'
-fi
+export LANG='en_US.UTF-8'
 
-if [[ "$LC_CTYPE" == "UTF-8" ]]; then
-  export LC_CTYPE='en_US.UTF-8'
-fi
+export LC_CTYPE='C.UTF-8'
+export LANGUAGE='en_US.UTF-8'
 
 typeset -gU cdpath fpath path
 
