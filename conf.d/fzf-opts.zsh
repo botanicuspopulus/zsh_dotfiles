@@ -4,13 +4,13 @@
 # fzf-powered CTRL-R
 # Ctrl-T: setting ripgrep or fd as the default source for ctrl-T fzf
 if (( $+commands[rg] )); then
-  export FZF_DEFAULT_COMMAND='rg --hidden --follow --no-messages --glob "!.git/"'
+  export FZF_DEFAULT_COMMAND='rg --hidden --follow --no-messages --glob "!.git/" .'
 elif (( $+commands[fd] )); then
-  export FZF_DEFAULT_COMMAND='fd --hidden --follow --type f'
+  export FZF_DEFAULT_COMMAND='fd --hidden --follow --type f .'
 elif (( $+commands[ag] )); then
   export FZF_DEFAULT_COMMAND='ag --path-to-ignore ~/.ignore --hidden --nogroup -l .'
 else
-  export FZF_DEFAULT_COMMAND='find -L . -mindepth 1'
+  export FZF_DEFAULT_COMMAND='find -L . -mindepth 1 .'
 fi
 
 if [[ -f /usr/share/fzf/completion.zsh ]]; then
@@ -117,7 +117,9 @@ s() {
 fzf-history-widget() {
   local selected num
   setopt localoptions noglobsubst noposixbuiltins pipefail 2> /dev/null
-  selected=( $(fc -rln 1 | FZF_DEFAULT_COMMAND="$FZF_DEFAULT_OPTS -n2..,.. -tiebreak=index --bind=ctrl-r:toggle-sort $FZF_CTRL_R_OPTS --query={(qqq)LBUFFER} +m" fzf) )
+  selected=( $(fc -rl 1 | 
+    awk '{ cmd=$0; sub(/^[ \t]*[0-9]+\**[ \t]+/, "", cmd); if (!seen[cmd]++) print $0 }' | 
+    FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} ${FZF_DEFAULT_OPTS} -n2..,.. -tiebreak=index --scheme=history --bind=ctrl-r:toggle-sort ${FZF_CTRL_R_OPTS} --query=${(qqq)LBUFFER} +m" fzf) )
   local ret=$?
   if [ -n "$selected" ]; then
     num=$selected[1]
