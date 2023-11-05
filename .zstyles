@@ -6,13 +6,15 @@ zstyle :plugin:zsh-completion-generator programs cat xattr
 # Don't prompt for a huge list, page it!
 unsetopt MENU_COMPLETE    # Do not auto select the first completion entry
 unsetopt FLOW_CONTROL     # Disable start/stop characters in shell editor
+unsetopt PATHDIRS
 setopt AUTO_MENU          # show completion menu on successive tab press
-setopt AUTO_LIST          # Automatically list choices on ambigious completion
 setopt COMPLETE_IN_WORD   # Complete from both ends
 setopt ALWAYS_TO_END      # Move cursor to the end of the complete word
 setopt AUTO_PARAM_SLASH   # If completed parameter is a directtory, add a trailing slash
-setopt GLOBDOTS           # files beginning with a . be matched without explicitly specifying the dot
+setopt complete_aliases   # don't expand aliases _before_ completion has finished
 
+autoload -U compinit 
+compinit -d $ZDOTDIR/.zcompdump
 zmodload -i zsh/complist
 
 zstyle ':antidote:bundle' file ${ZDOTDIR:-$HOME}/.zplugins
@@ -20,17 +22,14 @@ zstyle ':antidote:static' file ${ZDOTDIR:-$HOME}/.zplugins.zsh
 zstyle ':antidote:bundle' use-friendly-names 'yes'
 zstyle ':antidote:plugin:*' defer-options '-p'
 
-autoload -U compinit 
-compinit -d $ZDOTDIR/.zcompdump
-
-zstyle ':completion:*' menu select
-zstyle ':completion:*' completer _extensions _oldlist _complete _approximate _match _ignored _expand _force_rehash 
+zstyle ':completion:*' menu select=1 _complete _ignored _approximate
+zstyle ':completion:*:::' completer _expand _complete _ignored _approximate _extensions _oldlist _match _force_rehash 
 zstyle ':completion:*' list-dirs-first true
 zstyle ':completion:*' verbose yes
 zstyle ':completion:*' use-cache yes
 zstyle ':completion:*' complete-options true
 zstyle ':completion:*' file-sort modification reverse # Have the newer files last so I see them first
-zstyle ':completion:*' hosts off # Don't tab complete hosts (slow and if you have ad-blockin in your hosts files annoying)
+zstyle ':completion:*' hosts off # Don't tab complete hosts (slow and if you have ad-blocking in your hosts files annoying)
 zstyle ':completion:*' squeeze-slashes true
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' list-separator '  '
@@ -63,6 +62,7 @@ zstyle ':completion:*:functions' ignored-patterns '(_*|pre(cmd|exec)|prompt_*)' 
 zstyle ':completion:*:(rm|vi|nv|vim|kill|diff):*' ignore-line other # Don't complete stuff already on the line
 zstyle ':completion:*rm:*' file-patterns '*:all-files'
 
+zstyle ':completion:*:functions' ignored-patterns '_*'
 zstyle ':completion:*:(ssh|scp|rsync):*' tag-order 'hosts:-host:host hosts:-domain:domain hosts:-ip\ address *'
 zstyle ':completion:*:(scp|rsync):*' group-order users files all-files hosts-domain hosts-host hosts-ipaddr
 zstyle ':completion:*:ssh:*' group-order users hosts-domain hosts-host users hosts-ipaddr
