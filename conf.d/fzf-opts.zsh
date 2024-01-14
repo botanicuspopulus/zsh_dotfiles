@@ -27,7 +27,7 @@ export FZF_DEFAULT_OPTS="--ansi \
 --color=marker:#9ece6a,spinner:#9ece6a,header:#9ece6a \
 --pointer  \
 --prompt ':: ' \
---marker   \
+--marker 󰁔 \
 --layout=reverse \
 --info=inline \
 --border=rounded \
