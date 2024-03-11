@@ -5,8 +5,6 @@ if [ "$XDG_SESSION_DESKTOP" = "sway" ]; then
   fi
 fi
 
-export QT_QPA_PLATFORMTHEME=qt6ct
-
 GPG_TTY=$(tty)
 export GPG_TTY
 eval $(gpg-agent --daemon)

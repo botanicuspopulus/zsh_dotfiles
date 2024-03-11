@@ -25,21 +25,10 @@ fdw/ranger-zoxide
 z-shell/F-Sy-H
 z-shell/H-S-MW
 
-unixorn/git-extra-commands
-ohmyzsh/ohmyzsh path:plugins/git
-ohmyzsh/ohmyzsh path:plugins/git-extras
-ohmyzsh/ohmyzsh path:plugins/gitfast
-ohmyzsh/ohmyzsh path:plugins/git-lfs
-ohmyzsh/ohmyzsh path:plugins/gitignore
-egyptianbman/zsh-git-worktrees
-Schnouki/git-annex-zsh-completion kind:fpath
-alexiszamanidis/zsh-git-fzf
-
 ohmyzsh/ohmyzsh path:plugins/fzf
 Aloxaf/fzf-tab
 tom-power/fzf-tab-widgets
 KulkarniKaustubh/fzf-dir-navigator
-junegunn/fzf-git.sh kind:clone
 urbainvaes/fzf-marks
 joshskidmore/zsh-fzf-history-search
 lincheney/fzf-tab-completion kind:zsh path:zsh
@@ -68,4 +57,3 @@ MichaelAquilina/zsh-you-should-use
 hlissner/zsh-autopair
 reegnz/jq-zsh-plugin
 fdellwing/zsh-bat
-
