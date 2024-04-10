@@ -22,8 +22,6 @@ if [[ -e "$autoenv_activate" ]]; then
   source "$autoenv_activate"
 fi
 
-xrdb ~/.Xresources
-
 eval "$(direnv hook zsh)"
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
