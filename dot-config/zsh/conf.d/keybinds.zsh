@@ -30,8 +30,6 @@ bindkey -M vicmd "q" push-line
 # Push your line to the stack and run another command and then pop it back
 bindkey -M vicmd '^q' push-line
 
-bindkey '^X' create_completion
-
 # file rename magicks
 bindkey "^[m" copy-prev-shell-word
 

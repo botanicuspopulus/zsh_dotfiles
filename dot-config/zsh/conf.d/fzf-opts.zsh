@@ -20,7 +20,7 @@ elif [[ -f $DOTFILES/fzf/shell/completion.zsh ]]; then
 fi
 
 export FZF_DEFAULT_OPTS="--ansi \
---height 50% --min-height=30 \
+--height 50% --min-height=10 \
 --color=fg:#c0caf5,bg:#1a1b26,hl:#bb9af7 \
 --color=fg+:#c0caf5,bg+:#1a1b26,hl+:#7dcfff \
 --color=info:#7aa2f7,prompt:#7dcfff,pointer:#7dcfff \
@@ -113,23 +113,3 @@ s() {
       local line="$(echo $full | awk -F: '{print $2}')"
       [ -n "$file" ] && nvim "$file" +$line
 }
-
-fzf-history-widget() {
-  local selected num
-  setopt localoptions noglobsubst noposixbuiltins pipefail 2> /dev/null
-  selected=( $(fc -rl 1 | 
-    awk '{ cmd=$0; sub(/^[ \t]*[0-9]+\**[ \t]+/, "", cmd); if (!seen[cmd]++) print $0 }' | 
-    FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} ${FZF_DEFAULT_OPTS} -n2..,.. -tiebreak=index --scheme=history --bind=ctrl-r:toggle-sort ${FZF_CTRL_R_OPTS} --query=${(qqq)LBUFFER} +m" fzf) )
-  local ret=$?
-  if [ -n "$selected" ]; then
-    num=$selected[1]
-    if [ -n "$num" ]; then
-      zle vi-fetch-history -n $num
-    fi
-  fi
-  zle reset-prompt
-  return $ret
-}
-
-zle -N fzf-history-widget
-bindkey '^R' fzf-history-widget

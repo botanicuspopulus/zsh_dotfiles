@@ -101,27 +101,20 @@ alias autorotate="jhead -autorot"
 # dotfiles
 alias dotf='cd "$DOTFILES"'
 alias dotfed='cd "$DOTFILES" && ${VISUAL:-${EDITOR:-vim}} .'
-alias dotfl="cd \$DOTFILES/local"
 alias zdot='cd $ZDOTDIR'
 
 # java
 alias setjavahome="export JAVA_HOME=\`/usr/libexec/java_home\`"
 
-# todo-txt
-alias t="todo.sh"
-alias todos="$VISUAL $HOME/Desktop/todo.txt"
-
 # Exa aliases
-common_eza_flags='--icons --git'
+common_eza_flags='--icons'
 additional_eza_flags='--time-style --color-scale'
 alias ls='eza --icons'                                                    # ls
 alias l="eza -lbF ${common_eza_flags}"                                    # list, size, type, git
-alias ll="eza -lbGF ${common_eza_flags}"                                  # long list
-alias llm="eza -lbGd ${common_eza_flags} --sort=modified"                 # long list, modified date sort
-alias la="eza -lbhHigUmuSa ${common_eza_flags} ${additional_eza_flags}"   # all list
-alias la="eza -lbhHigUmuSa@ ${common_eza_flags} ${additional_eza_flags}"  # all + extended list
+alias ll="eza -lbF ${common_eza_flags}"                                  # long list
+alias llm="eza -lbd ${common_eza_flags} --sort=modified"                 # long list, modified date sort
 
-alias lS='eza -1 --icons'
+alias lsn='eza -1 --icons'
 alias lt='eza --tree --level=2'
 
 # noexpand

@@ -2,6 +2,7 @@ mattmc3/zephyr path:plugins/zfunctions
 
 ohmyzsh/ohmyzsh path:lib
 ohmyzsh/ohmyzsh path:plugins/aliases
+ohmyzsh/ohmyzsh path:plugins/colored-man-pages
 ohmyzsh/ohmyzsh path:plugins/command-not-found
 ohmyzsh/ohmyzsh path:plugins/copybuffer
 ohmyzsh/ohmyzsh path:plugins/copyfile
@@ -9,10 +10,11 @@ ohmyzsh/ohmyzsh path:plugins/copypath
 ohmyzsh/ohmyzsh path:plugins/cp
 ohmyzsh/ohmyzsh path:plugins/dirhistory
 ohmyzsh/ohmyzsh path:plugins/fancy-ctrl-z
+ohmyzsh/ohmyzsh path:plugins/gitfast
+ohmyzsh/ohmyzsh path:plugins/git-commit
 ohmyzsh/ohmyzsh path:plugins/man
-ohmyzsh/ohmyzsh path:plugins/pyenv
-ohmyzsh/ohmyzsh path:plugins/sudo
-ohmyzsh/ohmyzsh path:plugins/web-search
+ohmyzsh/ohmyzsh path:plugins/vi-mode
+ohmyzsh/ohmyzsh path:plugins/zsh-navigation-tools
 ohmyzsh/ohmyzsh path:plugins/zsh-interactive-cd
 
 mattmc3/zman
@@ -41,7 +43,6 @@ zsh-users/zsh-completions path:src kind:fpath
 zsh-users/zsh-history-substring-search kind:defer
 zsh-users/zsh-autosuggestions kind:defer
 zdharma-continuum/fast-syntax-highlighting kind:defer
-laggardkernel/zsh-thefuck
 
 belak/zsh-utils path:completion
 
