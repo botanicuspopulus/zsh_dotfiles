@@ -6,4 +6,4 @@ else
   export EDITOR='vi'
 fi
 
-export VISUAL='$EDITOR'
+export VISUAL="$EDITOR"
