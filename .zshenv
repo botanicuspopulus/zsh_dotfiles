@@ -3,8 +3,6 @@ export XDG_CACHE_HOME=$HOME/.cache
 export XDG_DATA_HOME=$HOME/.local/share
 export XDG_STATE_HOME=$HOME/.local/state
 
-export OPENAI_API_KEY=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
-
 export ZDOTDIR=${XDG_CONFIG_HOME:-$HOME/.config}/zsh
 
 export QUARTUS_ROOTDIR=$HOME/intelFPGA/18.1/quartus
