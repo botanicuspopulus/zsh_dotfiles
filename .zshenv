@@ -5,12 +5,11 @@ export XDG_STATE_HOME=$HOME/.local/state
 
 export ZDOTDIR=${XDG_CONFIG_HOME:-$HOME/.config}/zsh
 
-export QUARTUS_ROOTDIR=$HOME/intelFPGA/18.1/quartus
-
 # Custom
 export DOTFILES=$HOME/dotfiles
 export REPO_HOME=${XDG_CACHE_HOME:-$HOME}/repos
 export ANTIDOTE_HOME=$REPO_HOME
+export GOPATH=$HOME/go
 
 export LANG='en_US.UTF-8'
 
