@@ -2,6 +2,7 @@ mattmc3/zephyr path:plugins/zfunctions
 
 ohmyzsh/ohmyzsh path:lib
 ohmyzsh/ohmyzsh path:plugins/aliases
+ohmyzsh/ohmyzsh path:plugins/asdf
 ohmyzsh/ohmyzsh path:plugins/colored-man-pages
 ohmyzsh/ohmyzsh path:plugins/command-not-found
 ohmyzsh/ohmyzsh path:plugins/copybuffer
