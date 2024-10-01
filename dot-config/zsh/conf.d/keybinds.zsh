@@ -33,8 +33,6 @@ bindkey -M vicmd '^q' push-line
 # file rename magicks
 bindkey "^[m" copy-prev-shell-word
 
-bindkey -M vicmd ' ' vi-easy-motion
-
 ### Fix slowness of pastes with zsh-syntax-highlighting
 # Still needed as of 2023-06-24!
 pasteinit() {
