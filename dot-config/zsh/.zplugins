@@ -20,8 +20,6 @@ ohmyzsh/ohmyzsh path:plugins/zsh-interactive-cd
 
 mattmc3/zman
 
-casonadams/bitwarden-cli
-
 ohmyzsh/ohmyzsh path:plugins/zoxide
 fdw/ranger-zoxide
 
@@ -30,11 +28,8 @@ z-shell/H-S-MW
 
 ohmyzsh/ohmyzsh path:plugins/fzf
 Aloxaf/fzf-tab
-tom-power/fzf-tab-widgets
-KulkarniKaustubh/fzf-dir-navigator
 urbainvaes/fzf-marks
 joshskidmore/zsh-fzf-history-search
-lincheney/fzf-tab-completion kind:zsh path:zsh
 
 mafredri/zsh-async
 seletskiy/zsh-fuzzy-search-and-edit
