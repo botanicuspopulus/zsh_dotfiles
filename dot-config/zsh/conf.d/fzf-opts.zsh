@@ -19,22 +19,30 @@ elif [[ -f $DOTFILES/fzf/shell/completion.zsh ]]; then
   source $DOTFILES/fzf/shell/completion.zsh
 fi
 
-export FZF_DEFAULT_OPTS="--ansi \
---height 50% --min-height=10 \
---color=fg:#c0caf5,bg:#24283b,hl:#bb9af7 \
---color=fg+:#c0caf5,bg+:#24283b,hl+:#7dcfff \
---color=info:#7aa2f7,prompt:#7dcfff,pointer:#7dcfff \
---color=marker:#9ece6a,spinner:#9ece6a,header:#9ece6a \
---pointer  \
+FZF_COLOR="fg:#c0caf5,\
+fg+:#c0caf5,\
+bg:#24283b,\
+bg+:#24283b,\
+hl:#bb9af7,\
+hl+:#7dcfff,\
+info:#7aa2f7,\
+prompt:#7dcfff,\
+pointer:#7dcfff,\
+marker:#9ece6a"
+
+OUTPUT_STYLE="--color='$FZF_COLOR' \
+--pointer ' ' \
 --prompt ':: ' \
---marker 󰁔 \
---layout=reverse \
---info=inline \
---border=rounded \
---margin=1 \
+--marker '󰁔 ' \
 --padding=1 \
---cycle \
---multi"
+--margin=1"
+
+OUTPUT_SETTINGS="--ansi \
+--no-height \
+--border \
+--inline-info"
+
+export FZF_DEFAULT_OPTS="${OUTPUT_SETTINGS} ${OUTPUT_STYLE}"
 
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
 export FZF_ALT_C_COMMAND="fd --hidden --follow --type d"
