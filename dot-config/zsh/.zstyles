@@ -25,7 +25,6 @@ zstyle ':antidote:plugin:*' defer-options '-p'
 
 zstyle ':autocomplete:*' ignored-input '..##'
 
-zstyle ':completion:*' fzf-search-display true
 zstyle ':completion:*' list-dirs-first true
 zstyle ':completion:*' file-sort modification reverse # Have the newer files last so I see them first
 zstyle ':completion:*' hosts off # Don't tab complete hosts (slow and if you have ad-blocking in your hosts files annoying)
@@ -111,6 +110,7 @@ zstyle ':completion::*:(-command-|export):*' fake-parameters ${${${_comps[(I)-va
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
 zstyle 'fzf-tab:*' switch-group ',' '.'
 zstyle ':fzf-tab:*' fzf-bindings 'ctrl-e:accept' 'ctrl-a:toggle-all'
+zstyle ':fzf-tab:*' fzf-flags --color=fg:#c0caf5,fg+:#c0caf5,bg:#24283b,bg+:#24283b,hl:#bb9af7,hl+:#7dcfff --border=rounded --margin=1 --padding=1 --prompt=':: ' --pointer=' ' --marker='󰁔 '
 
 ### Autosuggest settings
 export ZSH_AUTOSUGGEST_USE_ASYNC=1
