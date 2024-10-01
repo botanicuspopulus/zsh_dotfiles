@@ -9,43 +9,28 @@ ohmyzsh/ohmyzsh path:plugins/copybuffer
 ohmyzsh/ohmyzsh path:plugins/copyfile
 ohmyzsh/ohmyzsh path:plugins/copypath
 ohmyzsh/ohmyzsh path:plugins/cp
-ohmyzsh/ohmyzsh path:plugins/dirhistory
 ohmyzsh/ohmyzsh path:plugins/fancy-ctrl-z
 ohmyzsh/ohmyzsh path:plugins/gitfast
-ohmyzsh/ohmyzsh path:plugins/git-commit
+ohmyzsh/ohmyzsh path:plugins/history-substring-search
 ohmyzsh/ohmyzsh path:plugins/man
+ohmyzsh/ohmyzsh path:plugins/tmuxinator
 ohmyzsh/ohmyzsh path:plugins/vi-mode
-ohmyzsh/ohmyzsh path:plugins/zsh-navigation-tools
-ohmyzsh/ohmyzsh path:plugins/zsh-interactive-cd
 
 mattmc3/zman
 
 ohmyzsh/ohmyzsh path:plugins/zoxide
 fdw/ranger-zoxide
 
+Aloxaf/fzf-tab
+
 z-shell/F-Sy-H
 z-shell/H-S-MW
 
-ohmyzsh/ohmyzsh path:plugins/fzf
-Aloxaf/fzf-tab
-urbainvaes/fzf-marks
-joshskidmore/zsh-fzf-history-search
-
-mafredri/zsh-async
-seletskiy/zsh-fuzzy-search-and-edit
-redxtech/zsh-fzf-utils
-marlonrichert/zsh-autocomplete
 zsh-users/zsh-completions path:src kind:fpath
-zsh-users/zsh-history-substring-search kind:defer
 zsh-users/zsh-autosuggestions kind:defer
-zdharma-continuum/fast-syntax-highlighting kind:defer
 
 belak/zsh-utils path:completion
 
-zsh-vi-more/vi-motions
-# ohmyzsh/ohmyzsh path:plugins/tmux
-ohmyzsh/ohmyzsh path:plugins/tmuxinator
-IngoMeyer441/zsh-easy-motion
 greymd/tmux-xpanes
 
 0b10/cheatsheet
