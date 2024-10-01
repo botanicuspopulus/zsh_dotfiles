@@ -19,37 +19,21 @@ elif [[ -f $DOTFILES/fzf/shell/completion.zsh ]]; then
   source $DOTFILES/fzf/shell/completion.zsh
 fi
 
-FZF_COLOR="fg:#c0caf5,\
-fg+:#c0caf5,\
-bg:#24283b,\
-bg+:#24283b,\
-hl:#bb9af7,\
-hl+:#7dcfff,\
-info:#7aa2f7,\
-prompt:#7dcfff,\
-pointer:#7dcfff,\
-marker:#9ece6a"
-
-OUTPUT_STYLE="--color='$FZF_COLOR' \
---pointer ' ' \
---prompt ':: ' \
---marker '󰁔 ' \
---padding=1 \
---margin=1"
-
-OUTPUT_SETTINGS="--ansi \
---no-height \
---border \
---inline-info"
-
-export FZF_DEFAULT_OPTS="${OUTPUT_SETTINGS} ${OUTPUT_STYLE}"
+export FZF_DEFAULT_OPTS='
+	--color fg:#c0caf5,bg:#24283b,hl:#bb9af7
+	--color fg+:#c0caf5,bg+:#24283b,hl+:#7dcfff
+	--color info:#7aa2f7,prompt:#7dcfff,pointer:#7dcfff,marker:#9ece6a
+	--border rounded
+	--pointer " "
+	--prompt ":: "
+	--marker "󰁔 "
+	--padding 1
+	--margin 1'
 
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
 export FZF_ALT_C_COMMAND="fd --hidden --follow --type d"
 
-export FZF_CTRL_T_OPTS="--preview='bat --style=numbers --color=always {}'"
 export FZF_ALT_C_OPTS="--preview='eza --tree --color always --icons --level=2 --only-dirs {} | head -n 50'"
-export FZF_CTRL_R_OPTS="--preview='echo {} --preview-window=down:3:hidden:wrap --bind='?:toggle-preview'"
 
 export FZF_COMPLETION_OPTS='--border --info=inline'
 
