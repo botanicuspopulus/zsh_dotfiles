@@ -4,5 +4,3 @@ export GPG_TTY="${TTY:-$(tty)}"
 if ! pgrep -u "$UID" gpg-agent > /dev/null; then
     gpg-connect-agent /bye
 fi
-
-export QSYS_ROOTDIR="/home/williamsmith/intelFPGA_pro/22.1/qsys/bin"
