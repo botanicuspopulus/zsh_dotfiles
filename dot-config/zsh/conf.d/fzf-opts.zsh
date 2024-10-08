@@ -19,16 +19,13 @@ elif [[ -f $DOTFILES/fzf/shell/completion.zsh ]]; then
   source $DOTFILES/fzf/shell/completion.zsh
 fi
 
-export FZF_DEFAULT_OPTS='
-	--color fg:#c0caf5,bg:#24283b,hl:#bb9af7
-	--color fg+:#c0caf5,bg+:#24283b,hl+:#7dcfff
-	--color info:#7aa2f7,prompt:#7dcfff,pointer:#7dcfff,marker:#9ece6a
-	--border rounded
-	--pointer " "
-	--prompt ":: "
-	--marker "󰁔 "
-	--padding 1
-	--margin 1'
+export FZF_DEFAULT_OPTS="
+  ${FZF_DEFAULT_OPTS} \
+	--pointer ' ' \
+	--prompt ':: ' \
+	--marker '󰁔 ' \
+	--padding 1 \
+	--margin 1"
 
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
 export FZF_ALT_C_COMMAND="fd --hidden --follow --type d"
