@@ -106,12 +106,6 @@ zstyle ':urlglobber' url-other-schema
 # Environment Variables
 zstyle ':completion::*:(-command-|export):*' fake-parameters ${${${_comps[(I)-value-*]#*,}%%,*}:#-*-}
 
-# FZF-Tab
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
-zstyle 'fzf-tab:*' switch-group ',' '.'
-zstyle ':fzf-tab:*' fzf-bindings 'ctrl-e:accept' 'ctrl-a:toggle-all'
-zstyle ':fzf-tab:*' fzf-flags --color=fg:#c0caf5,bg:#1f2335,bg+:#2e3c65,hl:#2ac3de,hl+:#2ac3de,border:#29a4bd,gutter:#1f2335,pointer:#ff007c,marker:#ff007c,spinner:#ff007c,scrollbar:#29a4bd,separator:#ff9e64,info:#545c7e,header:#ff9e64 --border=rounded --margin=1 --padding=1 --prompt=':: ' --pointer=' ' --marker='󰁔 '
-
 ### Autosuggest settings
 export ZSH_AUTOSUGGEST_USE_ASYNC=1
 export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=100

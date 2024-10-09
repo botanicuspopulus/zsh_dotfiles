@@ -24,3 +24,5 @@ zmodload zsh/net/tcp
 [[ -z "$TMUX" ]] && tmux -f $XDG_CONFIG_HOME/tmux/tmux.conf
 
 [[ -r "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
+
+eval "$(fzf --zsh)"
