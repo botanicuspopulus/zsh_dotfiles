@@ -19,13 +19,7 @@ elif [[ -f $DOTFILES/fzf/shell/completion.zsh ]]; then
   source $DOTFILES/fzf/shell/completion.zsh
 fi
 
-export FZF_DEFAULT_OPTS="
-  ${FZF_DEFAULT_OPTS} \
-	--pointer ' ' \
-	--prompt ':: ' \
-	--marker '󰁔 ' \
-	--padding 1 \
-	--margin 1"
+source $XDG_CONFIG_HOME/zsh/themes/tokyonight_night.sh
 
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
 export FZF_ALT_C_COMMAND="fd --hidden --follow --type d"
