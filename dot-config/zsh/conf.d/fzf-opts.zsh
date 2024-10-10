@@ -19,8 +19,32 @@ elif [[ -f $DOTFILES/fzf/shell/completion.zsh ]]; then
   source $DOTFILES/fzf/shell/completion.zsh
 fi
 
-source $XDG_CONFIG_HOME/zsh/themes/tokyonight_night.sh
-
+export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
+  --highlight-line \
+  --info=inline-right \
+  --ansi \
+  --pointer ' ' \
+  --marker '󰁔 ' \
+  --prompt ':: ' \
+  --layout=reverse \
+  --border=rounded \
+  --color=bg+:black \
+  --color=bg:-1 \
+  --color=border:cyan \
+  --color=fg:white \
+  --color=gutter:-1 \
+  --color=header:yellow \
+  --color=hl+:cyan \
+  --color=hl:cyan \
+  --color=info:gray \
+  --color=marker:magenta \
+  --color=pointer:magenta \
+  --color=prompt:cyan \
+  --color=query:white:regular \
+  --color=scrollbar:cyan \
+  --color=separator:yellow \
+  --color=spinner:magenta \
+"
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
 export FZF_ALT_C_COMMAND="fd --hidden --follow --type d"
 
