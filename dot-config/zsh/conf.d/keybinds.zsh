@@ -1,6 +1,3 @@
-bindkey -v
-export KEYTIMEOUT=1
-
 bindkey '^Y' accept-and-hold
 bindkey '^Q' push-line-or-edit
 
@@ -15,31 +12,6 @@ bindkey '^k' kill-line
 bindkey '^F' forward-word
 bindkey '^B' backward-word
 
-# Search based on what you typed in already
-bindkey -M vicmd "//" history-beginning-search-backward
-bindkey -M vicmd "??" history-beginning-search-forward
-
-# This is killer.. try it!
-bindkey -M vicmd "q" push-line
-
-# Push your line to the stack and run another command and then pop it back
-bindkey -M vicmd '^q' push-line
-
-# file rename magicks
-bindkey "^[m" copy-prev-shell-word
-
-bindkey -M menuselect 'h' vi-backward-char
-bindkey -M menuselect 'k' vi-up-line-or-history
-bindkey -M menuselect 'j' vi-down-line-or-history
-bindkey -M menuselect 'l' vi-forward-char
-
-bindkey -M menuselect '^xi' vi-insert
-bindkey -M menuselect '^xg' clear-screen
-bindkey -M menuselect '^xh' accept-and-hold
-bindkey -M menuselect '^xn' accept-and-infer-next-history
-bindkey -M menuselect '^xu' undo
-
-bindkey -M viins '\C-i' complete-word
 
 # Accept autosuggestions with shift+tab
 bindkey '^I' complete-word        # tab         | complete

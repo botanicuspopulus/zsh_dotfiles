@@ -1,7 +1,3 @@
-if (( $+commands[delta] )); then
-  export GIT_PAGER=delta
-fi
-
 if (( $+commands[bat] )); then
   export BAT_PAGER="less -Rf"
 fi

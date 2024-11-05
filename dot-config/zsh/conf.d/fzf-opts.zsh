@@ -19,6 +19,23 @@ elif [[ -f $DOTFILES/fzf/shell/completion.zsh ]]; then
   source $DOTFILES/fzf/shell/completion.zsh
 fi
 
+FZF_COLORS="bg+:black,\
+bg:-1,\
+border:cyan,\
+fg:white,\
+gutter:-1,\
+header:yellow,\
+hl+:cyan,\
+hl:cyan,\
+info:gray,\
+marker:magenta,\
+pointer:magenta,\
+prompt:cyan,\
+query:white:regular,\
+scrollbar:cyan,\
+separator:yellow,\
+spinner:magenta"
+
 export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
   --highlight-line \
   --info=inline-right \
@@ -27,29 +44,13 @@ export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
   --prompt ':: ' \
   --layout=reverse \
   --border=rounded \
-  --color=bg+:black \
-  --color=bg:-1 \
-  --color=border:cyan \
-  --color=fg:white \
-  --color=gutter:-1 \
-  --color=header:yellow \
-  --color=hl+:cyan \
-  --color=hl:cyan \
-  --color=info:gray \
-  --color=marker:magenta \
-  --color=pointer:magenta \
-  --color=prompt:cyan \
-  --color=query:white:regular \
-  --color=scrollbar:cyan \
-  --color=separator:yellow \
-  --color=spinner:magenta \
-"
+  --color '${FZF_COLORS}'"
+
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
-export FZF_ALT_C_COMMAND="fd --hidden --follow --type d"
-
+export FZF_ALT_C_COMMAND="fd --hidden --follow --type directory"
 export FZF_ALT_C_OPTS="--preview='eza --tree --color always --icons --level=2 --only-dirs {} | head -n 50'"
-
 export FZF_COMPLETION_OPTS='--border --info=inline'
+export FZF_COMPLETION_DIR_COMMANDS="cd pushd rmdir tree ls"
 
 function _fzf_select_and_exit() {
   fzf --select-1 --exit-0 --query="$*"
@@ -64,53 +65,23 @@ function _fd () {
   fi
 }
 
-function _fdtype () {
-  _fd $1 --type $2 ${@:3}
-}
+function _fdtype () { _fd $1 --type $2 ${@:3} }
+function _fdhtype () { _fdtype $1 $2 --hidden --no-ignore ${@:3} }
+function _rg () { rg --no-messages --line-number "$*" }
 
-function fdr () {
-  _fd / $@
-} 
-
-function _fdhtype () {
-  _fdtype $1 $2 --hidden --no-ignore ${@:3}
-}
-
-function fdd () {
-  _fdtype $1 directory ${@:2}
-}
-
-function fde () {
-  _fdtype $1 executable ${@:2}
-}
-
-function fdf () {
-  _fdtype $1 file ${@:2}
-}
-
-function fds () {
-  _fdtype $1 symlink ${@:2}
-}
-
-function fdh () {
-  _fd $1 --hidden --no-ignore ${@:2} 
-}
-
-function fddh () {
-  _fdhtype $1 directory ${@:2}
-}
-
-function fdeh () {
-  _fdhtype $1 executable ${@:2}
-}
-
-function fdfh () {
-  _fdhtype $1 file ${@:2}
-}
-
-function fdsh () {
-  _fdhtype $1 symlink ${@:2}
-}
+function fdr () { _fd / $@ } 
+function fdd () { _fdtype $1 directory ${@:2} }
+function fde () { _fdtype $1 executable ${@:2} }
+function fdf () { _fdtype $1 file ${@:2} }
+function fds () { _fdtype $1 symlink ${@:2} }
+function fdh () { _fd $1 --hidden --no-ignore ${@:2} }
+function fddh () { _fdhtype $1 directory ${@:2} }
+function fdeh () { _fdhtype $1 executable ${@:2} }
+function fdfh () { _fdhtype $1 file ${@:2} }
+function fdsh () { _fdhtype $1 symlink ${@:2} }
+function fa() { local dir=$(fdd . | fzf --no-multi --query="$*") && cd "$dir" }
+function fah() { local dir=$(fddh . | fzf --no-multi --query="$*") && cd "$dir" }
+function fenv() { env | fzf }
 
 function show() {
   local file=$(fdr | _fzf_select_and_exit "$*")
@@ -133,27 +104,11 @@ function vf() {
   [[ -d $file ]] && cd "$file"
 }
 
-function fa() {
-  local dir=$(fdd . | fzf --no-multi --query="$*") && cd "$dir"
-}
-
-function fah() {
-  local dir=$(fddh . | fzf --no-multi --query="$*") && cd "$dir"
-}
-
 # global: cd into the directory of the selected file
 # similar to 'zz', but this one does a full global file search
 function fl() {
   local file=$(fdr | fzf +m -q "$*") && cd "${file:h}"
-  eza --oneline --icons
-}
-
-function fenv() {
-  env | fzf
-}
-
-function _rg () {
-  rg --no-messages "$*"
+  eza --icons
 }
 
 function _fzf_select_preview() {
@@ -167,13 +122,13 @@ function _fzf_select_preview() {
   local preview_cmd='search={};
     search=( ${(s/:/)search} );
     file=${search[1]};
-    line=${search[2]};'
-  preview_cmd+="margin=5;" 
-  preview_cmd+='tail -n +$(( (line - margin) > 0 ? (line - margin) : 0)) $file \
+    line=${search[2]};
+    margin='${margin}'; 
+    tail -n +$(( (line - margin) > 0 ? (line - margin) : 0)) $file \
     | head -n $(( margin*2 + 1 )) \
-    | bat --paging=never --color=always --style=full --file-name $file --highlight-line $(( margin + 1))'
-  
-  echo "$args" | fzf --disabled --select-1 --exit-0 --preview-window up:$((2*margin + 1)) --preview="$preview_cmd"
+    | bat --paging=never --color=always --style=numbers,snip --file-name $file --highlight-line $(( margin + 1))'
+
+  echo "$args" | fzf --select-1 --exit-0 --preview-window up:$((2*margin + 1)) --preview="$preview_cmd"
 }
 
 # search source code, then pipe files with 10 lines file buffer into fzf preview using bat
@@ -188,4 +143,40 @@ function s() {
   full=( ${(s/:/)full} )
   local file="${full[1]}"
   local line="${full[2]}"
+}
+
+function fif() {
+  if (( $# == 0 )); then
+    echo "Usage: fif <query>"
+    return 1
+  fi
+
+  rg --files-with-matches --no-messages "$1" \
+    | fzf --preview "highlight -O ansi -l {} 2> /dev/null \
+    | rg --colors 'match:bg:yellow' --ignore-case --pretty --context 10 '$1' \
+    || rg --ignore-case --pretty --context 10 '$1' {}"
+}
+
+function fifa() {
+  if (( $# == 0 )); then
+    echo "Usage: fifa <query>"
+    return 1
+  fi
+
+  local file="$(rga --max-count=1 --ignore-case --files-with-matches --no-messages "$*" \
+    | fzf-tmux -p +m --preview="rga --ignore-case --pretty --context 10 '"$*"' {}")" \
+    && print -z "./$file" || return 1
+}
+
+function fpdf() {
+  result=$(fdf --glob '*.pdf' | fzf --bind "ctrl-r:reload(fdf '*.pdf')" --preview "pdftotext {} - | less")
+  [[ -n $result ]] && nohup zathura "$result" &>/dev/null & disown
+}
+
+function fman() {
+  man -k . | fzf --query="$1" --prompt='man>' --preview  $'echo {} | tr -d \'()\' | awk \'{printf "%s ", $2} {print $1}\' | xargs -r man' | tr -d '()' | awk '{printf "%s ", $2} {print $1}' | xargs -r man
+}
+
+function fyay() {
+  yay -Slq | fzf --multi --reverse --preview 'yay -Si {1}' | xargs -ro yay -S
 }

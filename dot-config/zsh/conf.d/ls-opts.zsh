@@ -2,7 +2,7 @@
 common_flags='--icons'
 files_command="eza ${common_flags}"
 
-common_ls_flags='--oneline --binary --classify'
+common_ls_flags='--binary --classify=always'
 ls_command="${files_command} ${common_ls_flags}"
 
 alias ls="${ls_command}"

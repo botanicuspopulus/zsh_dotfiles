@@ -28,11 +28,6 @@ if (( $+commands[btm] )); then
 fi
 
 if (( $+commands[fd] )); then
-  alias fdd='fd --type=directory'
-  alias fde='fd --type=executable'
-  alias fdf='fd --type=file'
-  alias fds='fd --type=symlink'
-
   chmod_files() {
     fdf . -X chmod "$1" {}
   }
@@ -48,10 +43,9 @@ fi
 
 alias -s {c,h,cpp,py,sh,md,txt,conf,ini,yml,yaml,toml,xml,html,css,js,json,sql}=nvim
 
-
 # mask built-ins with better defaults
 alias ping='ping -c 5'
-alias nv=nvim
+alias cat=bat
 
 # directories
 alias secrets="cd ${XDG_DATA_HOME:=~/.local/share}/secrets"
@@ -77,6 +71,14 @@ alias biggest='du -s ./* | sort -nr | awk '\''{print $2}'\'' | xargs du -sh'
 alias dux='du -x --max-depth=1 | sort -n'
 alias dud='du -d 1 -h'
 alias duf='du -sh *'
+
+alias bathelp='bat --plain --language=help'
+help() {
+  "$@" --help 2>&1 | bathelp
+}
+
+alias -g -- -h='-h 2>&1 | bathelp'
+alias -g -- --help='--help 2>&1 | bathelp'
 
 # url encode/decode
 alias urldecode='python3 -c "import sys, urllib.parse as ul; \
