@@ -4,22 +4,23 @@
 # Especially useful for some commands with '^', '~', '#', e.g. 'git show HEAD^1'
 unsetopt NOMATCH
 
-setopt VI
 setopt INTERACTIVE_COMMENTS
 setopt NO_CORRECT
-setopt LIST_AMBIGUOUS
 setopt LIST_PACKED
-setopt HASH_LIST_ALL
 setopt NO_LIST_TYPES
-setopt NO_LIST_BEEP
 setopt NO_CLOBBER
 setopt NO_CASE_GLOB
+setopt NOGLOBDOTS         # Don't match dotfiles
+setopt NOSHWORDSPLIT      # Use zsh style word splitting
 setopt NUMERIC_GLOB_SORT
-setopt EXTENDED_GLOB
+
+# In order to use #, ~, and ^ for filename generation grep word 
+# *~(*.gz|*.zip|*.tar|*.tar.gz|*.tar.bz2|*.tar.xz|*.tar.zst) searches for word not in compressed files
+setopt EXTENDED_GLOB 
 setopt GLOB_COMPLETE
 setopt MAGIC_EQUAL_SUBST # enable filename expansion for arguments of the form 'anything=expression'
 setopt PROMPT_SUBST
- 
+
 WORDCHARS=''
 
 # Path config

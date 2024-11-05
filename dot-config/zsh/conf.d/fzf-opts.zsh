@@ -22,7 +22,6 @@ fi
 export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
   --highlight-line \
   --info=inline-right \
-  --ansi \
   --pointer ' ' \
   --marker '󰁔 ' \
   --prompt ':: ' \
@@ -52,53 +51,129 @@ export FZF_ALT_C_OPTS="--preview='eza --tree --color always --icons --level=2 --
 
 export FZF_COMPLETION_OPTS='--border --info=inline'
 
+function _fzf_select_and_exit() {
+  fzf --select-1 --exit-0 --query="$*"
+}
+
+function _fd () {
+  # Check if $1 is /, if so, use --full-path, otherwise just use fd
+  if [[ $1 == "/" ]]; then
+    fd $1 --full-path ${@}
+  else
+    fd $@
+  fi
+}
+
+function _fdtype () {
+  _fd $1 --type $2 ${@:3}
+}
+
+function fdr () {
+  _fd / $@
+} 
+
+function _fdhtype () {
+  _fdtype $1 $2 --hidden --no-ignore ${@:3}
+}
+
+function fdd () {
+  _fdtype $1 directory ${@:2}
+}
+
+function fde () {
+  _fdtype $1 executable ${@:2}
+}
+
+function fdf () {
+  _fdtype $1 file ${@:2}
+}
+
+function fds () {
+  _fdtype $1 symlink ${@:2}
+}
+
+function fdh () {
+  _fd $1 --hidden --no-ignore ${@:2} 
+}
+
+function fddh () {
+  _fdhtype $1 directory ${@:2}
+}
+
+function fdeh () {
+  _fdhtype $1 executable ${@:2}
+}
+
+function fdfh () {
+  _fdhtype $1 file ${@:2}
+}
+
+function fdsh () {
+  _fdhtype $1 symlink ${@:2}
+}
+
 function show() {
-  local file
-  file=$(fd / | fzf --query="$*" --select-1 --exit-0)
-  [ ! -n "$file" ] && echo "no results found" && return -1
-  [ -f "$file" ] && bat "$file"
-  [ -d "$file" ] && cd "$file"
+  local file=$(fdr | _fzf_select_and_exit "$*")
+  [[ ! -n $file ]] && echo "no results found" && return 1
+  [[ -f $file ]] && bat "$file"
+  [[ -d $file ]] && cd "$file"
 }
 
 function showl() {
-  local file
-  file=$(fzf --query="$*" --select-1 --exit-0)
-  [ ! -n "$file" ] && echo "no results found" && return -1
-  [ -f "$file" ] && bat "$file"
-  [ -d "$file" ] && cd "$file"
+  local file=$(_fzf_select_and_exit "$*")
+  [[ ! -n $file ]] && echo "no results found" && return 1
+  [[ -f $file ]] && bat "$file"
+  [[ -d $file ]] && cd "$file"
 }
 
 # global file search -> vim
 function vf() {
-  local file
-  file="$(fd / | fzf --query="$*" --select-1 --exit-0)"
-  [ -f "$file" ] && nvim "$file"
-  [ -d "$file" ] && echo "Result is a directory, running cd" && cd "$file"
+  local file=$(fdr | _fzf_select_and_exit "$*")
+  [[ -f $file ]] && "${EDITOR:-nvim}" "$file"
+  [[ -d $file ]] && cd "$file"
 }
 
-fa() {
-  local dir
-  dir=$(fd --type directory | fzf --no-multi --query="$*") && cd "$dir"
+function fa() {
+  local dir=$(fdd . | fzf --no-multi --query="$*") && cd "$dir"
 }
 
-fah() {
-  local dir
-  dir=$(fd --type directory --hidden --no-ignore | fzf --no-multi --query="$*") && cd "$dir"
+function fah() {
+  local dir=$(fddh . | fzf --no-multi --query="$*") && cd "$dir"
 }
 
 # global: cd into the directory of the selected file
 # similar to 'zz', but this one does a full global file search
-fl() {
-  local file
-  local dir
-  file=$(fd / | fzf +m -q "$*") && dir=$(dirname "$file") && cd "$dir"
-  ls
+function fl() {
+  local file=$(fdr | fzf +m -q "$*") && cd "${file:h}"
+  eza --oneline --icons
 }
 
-fenv() {
-  local out
-  out=$(env | fzf)
-  echo $(echo $out)
+function fenv() {
+  env | fzf
+}
+
+function _rg () {
+  rg --no-messages "$*"
+}
+
+function _fzf_select_preview() {
+  local args="$*"
+  if (( ${#args} == 0 ))
+  then
+    [ -p /dev/stdin ] && args="$(</dev/stdin)" || exit 1
+  fi
+
+  local margin=5
+  local preview_cmd='search={};
+    search=( ${(s/:/)search} );
+    file=${search[1]};
+    line=${search[2]};'
+  preview_cmd+="margin=5;" 
+  preview_cmd+='tail -n +$(( (line - margin) > 0 ? (line - margin) : 0)) $file \
+    | head -n $(( margin*2 + 1 )) \
+    | bat --paging=never --color=always --style=full --file-name $file --highlight-line $(( margin + 1))'
+  
+  echo "$args" | fzf --disabled --select-1 --exit-0 --preview-window up:$((2*margin + 1)) --preview="$preview_cmd"
 }
 
 # search source code, then pipe files with 10 lines file buffer into fzf preview using bat
@@ -107,16 +182,10 @@ fenv() {
 # - bat: https://github.com/sharkdp/bat
 # - rg: https://gtihub.com/dandavison/rg
 # - fd: https://github.com/sharkdp/fd
-s() {
-  local margin=5 # number of lines above and below search result
-  local preview_cmd='search={};file=$(echo $search | | cut -d':' -f 1);'
-  preview_cmd+="margin=$margin;" # Inject value into space
-  preview_cmd+='line=$(echo $search | cut -d':' -f 2);'
-  preview_cmd+='tail -n +$(( $(( $line - $margin )) > 0 ? $(($line - $margin)) : 0)) $file | head -n $(( $margin*2 + 1 )) |'
-  preview_cmd+='bat --paging=never --color=always --style=full --file-name $file --highlight-line $(( $margin + 1))'
-  local=$(rg "$*" \
-    | fzf --select-1 --exit-0 --preview-window up:$(( $margin*2 + 1 )) --height=60% --preview $preview_cmd)
-      local file="$(echo $full | awk -F: '{print $1}')"
-      local line="$(echo $full | awk -F: '{print $2}')"
-      [ -n "$file" ] && nvim "$file" +$line
+function s() {
+  local full=$(_rg "$*" | _fzf_select_preview)
+
+  full=( ${(s/:/)full} )
+  local file="${full[1]}"
+  local line="${full[2]}"
 }

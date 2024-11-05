@@ -46,6 +46,8 @@ if (( $+commands[fd] )); then
   }
 fi
 
+alias -s {c,h,cpp,py,sh,md,txt,conf,ini,yml,yaml,toml,xml,html,css,js,json,sql}=nvim
+
 
 # mask built-ins with better defaults
 alias ping='ping -c 5'
@@ -93,17 +95,6 @@ alias print-functions='print -l ${(k)functions[(I)[^_]*]} | sort'
 
 # auto-orient images based on exif tags
 alias autorotate="jhead -autorot"
-
-# Exa aliases
-common_eza_flags='--icons'
-additional_eza_flags='--time-style --color-scale'
-alias ls='eza --icons'                                                    # ls
-alias l="eza -lbF ${common_eza_flags}"                                    # list, size, type, git
-alias ll="eza -lbF ${common_eza_flags}"                                  # long list
-alias llm="eza -lbd ${common_eza_flags} --sort=modified"                 # long list, modified date sort
-
-alias lsn='eza -1 --icons'
-alias lt='eza --tree --level=2'
 
 # noexpand
 noexpand_aliases=(

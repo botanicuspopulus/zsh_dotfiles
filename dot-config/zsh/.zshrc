@@ -3,6 +3,10 @@
 autoload -Uz compinit 
 compinit
 
+zmodload -i zsh/complist
+zmodload -i zsh/parameter
+zmodload -i zsh/mathfunc
+
 for z in $ZDOTDIR/conf.d/*.zsh; do
   source "$z"
 done
@@ -17,8 +21,11 @@ zmodload zsh/net/tcp
 
 [[ -r "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
 
+source "$HOME/.asdf/asdf.sh"
+
 eval "$(gh copilot alias -- zsh)"
 eval "$(fzf --zsh)"
+#
 # BEGIN ANSIBLE MANAGED BLOCK
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"

@@ -19,9 +19,6 @@ bindkey '^B' backward-word
 bindkey -M vicmd "//" history-beginning-search-backward
 bindkey -M vicmd "??" history-beginning-search-forward
 
-bindkey -M vicmd 'k' history-substring-search-up
-bindkey -M vicmd 'j' history-substring-search-down
-
 # This is killer.. try it!
 bindkey -M vicmd "q" push-line
 
@@ -30,6 +27,23 @@ bindkey -M vicmd '^q' push-line
 
 # file rename magicks
 bindkey "^[m" copy-prev-shell-word
+
+bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'k' vi-up-line-or-history
+bindkey -M menuselect 'j' vi-down-line-or-history
+bindkey -M menuselect 'l' vi-forward-char
+
+bindkey -M menuselect '^xi' vi-insert
+bindkey -M menuselect '^xg' clear-screen
+bindkey -M menuselect '^xh' accept-and-hold
+bindkey -M menuselect '^xn' accept-and-infer-next-history
+bindkey -M menuselect '^xu' undo
+
+bindkey -M viins '\C-i' complete-word
+
+# Accept autosuggestions with shift+tab
+bindkey '^I' complete-word        # tab         | complete
+
 
 ### Fix slowness of pastes with zsh-syntax-highlighting
 # Still needed as of 2023-06-24!
