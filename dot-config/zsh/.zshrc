@@ -1,9 +1,5 @@
-[[ -r $ZDOTDIR/.zstyles ]] && source $ZDOTDIR/.zstyles
+source $ZDOTDIR/completion.zsh
 
-autoload -Uz compinit 
-compinit
-
-zmodload -i zsh/complist
 zmodload -i zsh/parameter
 zmodload -i zsh/mathfunc
 

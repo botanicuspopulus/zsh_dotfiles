@@ -1,4 +1,7 @@
 # vim ft=zsh
+autoload -Uz vcs_info
+
+zmodload -i zsh/complist
 
 # Don't prompt for a huge list, page it!
 unsetopt MENU_COMPLETE    # Do not auto select the first completion entry
@@ -12,6 +15,10 @@ setopt AUTO_PARAM_SLASH   # If completed parameter is a directtory, add a traili
 setopt completealiases    # don't expand aliases _before_ completion has finished
 setopt LIST_AMBIGUOUS     # Complete as much of a completion until it gets ambiguous
 setopt HASH_LIST_ALL      # Hash everything before completion
+
+autoload -Uz compinit 
+compinit
+
 
 # General format of zstyle: ":completion:<func>:<completer>:<command>:<argument>:<tag>"
 # <func> is the name of the function that is being called
