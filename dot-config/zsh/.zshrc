@@ -7,6 +7,8 @@ for z in $ZDOTDIR/conf.d/*.zsh; do
   source "$z"
 done
 
+source $ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
 eval "$(direnv hook zsh)"
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
