@@ -1,8 +1,5 @@
 # vim ft=zsh
 
-# Antidote
-zstyle :plugin:zsh-completion-generator programs cat xattr
-
 # Don't prompt for a huge list, page it!
 unsetopt MENU_COMPLETE    # Do not auto select the first completion entry
 unsetopt FLOW_CONTROL     # Disable start/stop characters in shell editor
@@ -14,8 +11,6 @@ setopt ALWAYS_TO_END      # Move cursor to the end of the complete word
 setopt AUTO_PARAM_SLASH   # If completed parameter is a directtory, add a trailing slash
 setopt complete_aliases   # don't expand aliases _before_ completion has finished
 
-autoload -U compinit 
-compinit -d $ZDOTDIR/.zcompdump
 zmodload -i zsh/complist
 
 zstyle ':antidote:bundle' file ${ZDOTDIR:-$HOME}/.zplugins
@@ -24,6 +19,16 @@ zstyle ':antidote:bundle' use-friendly-names 'yes'
 zstyle ':antidote:plugin:*' defer-options '-p'
 
 zstyle ':autocomplete:*' ignored-input '..##'
+
+zstyle ':completion:*' completer _complete _extensions _approximate
+
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "XDG_CACHE_HOME/zsh/.zcompcache"
+
+zstyle ':completion:*' menu select
+
+zstyle ':completion:*:*:*:*:*:descriptions' format '%F{green}-- %d --%f'
+zstyle ':completion:*:*:*:*:*:corrections'  format '%F{yellow}!- %d (errors:%e) -!%f'
 
 zstyle ':completion:*' list-dirs-first true
 zstyle ':completion:*' file-sort modification reverse # Have the newer files last so I see them first
@@ -38,7 +43,7 @@ zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 
 zstyle ':completion:*:git-checkout:*' sort false
 
-zstyle ':completion:*:matches' group 'yes' # Group completions by type (file, external command, etc)
+zstyle ':completion:*:matches' group '' # Group completions by type (file, external command, etc)
 zstyle ':completion:*:functions' ignored-patterns '(_*|pre(cmd|exec)|prompt_*)'  # ignores unavailable commands
 
 zstyle ':completion:*:(rm|vi|nv|vim|kill|diff):*' ignore-line other # Don't complete stuff already on the line

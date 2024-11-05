@@ -22,13 +22,6 @@ setopt PROMPT_SUBST
  
 WORDCHARS=''
 
-if [[ -f /proc/sys/fs/binfmt_misc/WSLInterop ]]; then
-  umask 022
-  alias open=explorer.exe
-  alias pbcopy=clip.exe
-  alias pbpaste='pwsh Get-Clipboard | sed "s/\r$//" | head -c -1'
-fi
-
 # Path config
 # Note: Configuring $PATH should preferably be done in the ~/.zshrc file in order that zsh plugins are also provisioned
 # with exeutables from $PATH. Entries listed here may not be visible from zsh plugins and source scripts

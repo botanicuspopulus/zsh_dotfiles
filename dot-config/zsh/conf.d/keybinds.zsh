@@ -1,7 +1,5 @@
-bindkey -e
-stty -ixon
-
 bindkey -v
+export KEYTIMEOUT=1
 
 bindkey '^Y' accept-and-hold
 bindkey '^Q' push-line-or-edit

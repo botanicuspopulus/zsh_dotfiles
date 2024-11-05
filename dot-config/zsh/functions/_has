@@ -1,7 +1,0 @@
-#!/usr/bin/env zsh
-
-function _has() {
-  $( whence $1 >/dev/null )
-}
-
-_has

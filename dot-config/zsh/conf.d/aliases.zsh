@@ -47,9 +47,6 @@ if (( $+commands[fd] )); then
 fi
 
 
-# single character shortcuts - be sparing!
-alias _=sudo
-
 # mask built-ins with better defaults
 alias ping='ping -c 5'
 alias nv=nvim
@@ -86,7 +83,6 @@ alias urlencode='python3 -c "import sys, urllib.parse as ul; \
     print (ul.quote_plus(sys.argv[1]))"'
 
 # misc
-alias please=sudo
 alias zshrc='${EDITOR:-vim} "${ZDOTDIR:-$HOME}"/.zshrc'
 alias cls="clear && printf '\e[3J'"
 
@@ -97,14 +93,6 @@ alias print-functions='print -l ${(k)functions[(I)[^_]*]} | sort'
 
 # auto-orient images based on exif tags
 alias autorotate="jhead -autorot"
-
-# dotfiles
-alias dotf='cd "$DOTFILES"'
-alias dotfed='cd "$DOTFILES" && ${VISUAL:-${EDITOR:-vim}} .'
-alias zdot='cd $ZDOTDIR'
-
-# java
-alias setjavahome="export JAVA_HOME=\`/usr/libexec/java_home\`"
 
 # Exa aliases
 common_eza_flags='--icons'

@@ -31,9 +31,6 @@ belak/zsh-utils path:completion
 
 greymd/tmux-xpanes
 
-0b10/cheatsheet
-MichaelAquilina/zsh-you-should-use
-
 hlissner/zsh-autopair
 reegnz/jq-zsh-plugin
 fdellwing/zsh-bat

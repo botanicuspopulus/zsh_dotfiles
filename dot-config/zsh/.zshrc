@@ -1,15 +1,7 @@
 [[ -r $ZDOTDIR/.zstyles ]] && source $ZDOTDIR/.zstyles
 
-[[ -d $ANTIDOTE_HOME/mattmc3/antidote ]] ||
-  git clone --depth 1 --quiet https://github.com/mattmc3/antidote $ANTIDOTE_HOME/mattmc3/antidote
-
-source $ANTIDOTE_HOME/mattmc3/antidote/antidote.zsh
-antidote load
-
-autoload zmv
-
-autoload -U compinit 
-compinit -d $ZDOTDIR/.zcompdump
+autoload -Uz compinit 
+compinit
 
 for z in $ZDOTDIR/conf.d/*.zsh; do
   source "$z"
@@ -27,3 +19,8 @@ zmodload zsh/net/tcp
 
 eval "$(gh copilot alias -- zsh)"
 eval "$(fzf --zsh)"
+# BEGIN ANSIBLE MANAGED BLOCK
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+# END ANSIBLE MANAGED BLOCK
