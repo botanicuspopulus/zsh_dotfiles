@@ -1,21 +1,8 @@
 bindkey '^Y' accept-and-hold
 bindkey '^Q' push-line-or-edit
 
-bindkey '^w' backward-kill-word
-bindkey '^h' backward-delete-char
-
-bindkey '^p' history-substring-search-up
-bindkey '^n' history-substring-search-down
-bindkey '^a' beginning-of-line
-bindkey '^e' end-of-line
-bindkey '^k' kill-line
-bindkey '^F' forward-word
-bindkey '^B' backward-word
-
-
 # Accept autosuggestions with shift+tab
 bindkey '^I' complete-word        # tab         | complete
-
 
 ### Fix slowness of pastes with zsh-syntax-highlighting
 # Still needed as of 2023-06-24!

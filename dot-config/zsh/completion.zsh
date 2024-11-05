@@ -54,7 +54,11 @@ zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-dir
 
 # Insert all expansions for expand completer
 zstyle ':completion:*:expand:*' tag-order all-expansions
+
 zstyle ':completion:*:history-words' stop yes
+zstyle ':completion:*:history-words' remove-all-dups yes
+zstyle ':completion:*:history-words' list false
+zstyle ':completion:*:history-words' menu yes
 
 zstyle ':completion:*:messages' format '%d'
 zstyle ':completion:*:options' auto-description '%d'
@@ -86,6 +90,7 @@ zstyle ':completion:*:processes-names' command 'ps c -u $USER -o command | uniq'
 zstyle ':completion:*:processes' command 'ps -au$USER -o pid,time,cmd | grep -v "ps -au$USER -o pid,time,cmd"'
 zstyle ':completion:*:*:kill:*' menu yes select
 zstyle ':completion:*:*:kill:*' force-list always
+zstyle ':completion:*:*:kill:*' insert-ids single
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)[ 0-9:]#([^ ]#)*=01;30=01;31=01;38'
 zstyle ':completion:*:*:killall:*' menu yes select
 zstyle ':completion:*:*:killall:*' force-list always
