@@ -19,22 +19,22 @@ elif [[ -f $DOTFILES/fzf/shell/completion.zsh ]]; then
   source $DOTFILES/fzf/shell/completion.zsh
 fi
 
-FZF_COLORS="bg+:black,\
-bg:-1,\
-border:cyan,\
-fg:white,\
-gutter:-1,\
-header:yellow,\
-hl+:cyan,\
-hl:cyan,\
-info:gray,\
-marker:magenta,\
-pointer:magenta,\
-prompt:cyan,\
-query:white:regular,\
-scrollbar:cyan,\
-separator:yellow,\
-spinner:magenta"
+FZF_COLORS="bg+:#283457,\
+bg:#16161e,\
+border:#27a1b9,\
+fg:#c0caf5,\
+gutter:#16161e,\
+header:#ff9e64,\
+hl+:#2ac3de,\
+hl:#2ac3de,\
+info:#545c7e,\
+marker:#ff007c,\
+pointer:#ff007c,\
+prompt:#2ac3de,\
+query:#c0caf5:regular,\
+scrollbar:#27a1b9,\
+separator:#ff9e64,\
+spinner:#ff007c"
 
 export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
   --highlight-line \
@@ -67,7 +67,7 @@ function _fd () {
 
 function _fdtype () { _fd $1 --type $2 ${@:3} }
 function _fdhtype () { _fdtype $1 $2 --hidden --no-ignore ${@:3} }
-function _rg () { rg --no-messages --line-number "$*" }
+function _rg () { rg --no-messages --column --line-number "$*" }
 
 function fdr () { _fd / $@ } 
 function fdd () { _fdtype $1 directory ${@:2} }
@@ -126,9 +126,14 @@ function _fzf_select_preview() {
     margin='${margin}'; 
     tail -n +$(( (line - margin) > 0 ? (line - margin) : 0)) $file \
     | head -n $(( margin*2 + 1 )) \
-    | bat --paging=never --color=always --style=numbers,snip --file-name $file --highlight-line $(( margin + 1))'
+    | bat --paging=never --color=always --style=numbers,snip --file-name $file --highlight-line {2} {1}'
 
-  echo "$args" | fzf --select-1 --exit-0 --preview-window up:$((2*margin + 1)) --preview="$preview_cmd"
+  echo "$args" | \
+    fzf --select-1 
+        --exit-0 \
+        --delimiter=':' \
+        --preview-window up:$((2*margin + 1)) \
+        --preview="$preview_cmd"
 }
 
 # search source code, then pipe files with 10 lines file buffer into fzf preview using bat
@@ -138,11 +143,24 @@ function _fzf_select_preview() {
 # - rg: https://gtihub.com/dandavison/rg
 # - fd: https://github.com/sharkdp/fd
 function s() {
-  local full=$(_rg "$*" | _fzf_select_preview)
-
-  full=( ${(s/:/)full} )
-  local file="${full[1]}"
-  local line="${full[2]}"
+  local RELOAD='reload:rg --column --line-number --smart-case {q} || :'
+  local OPENER='if (( FZF_SELECT_COUNT == 0 )); then
+                  nvim  {1} +{2}
+                else
+                  nvim +cw -q {+f} # Build quickfix list for selected items
+                fi'
+  local HEADER_LINES=4
+  local OFFSET=3
+  local TERMINAL_WIDTH=80
+  fzf --disabled --ansi \
+      --bind "start:$RELOAD" \
+      --bind "change:$RELOAD" \
+      --bind "enter:become:$OPENER" \
+      --bind "ctrl-o:execute:$OPENER" \
+      --delimiter ':' \
+      --preview "bat --style=full --color=always --highlight-line {2} {1}" \
+      --preview-window "~${HEADER_LINES},+{2}+${HEADER_LINES}/${OFFSET},<${TERMINAL_WIDTH}(up)" \
+      --query "$*"
 }
 
 function fif() {

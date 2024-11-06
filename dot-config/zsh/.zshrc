@@ -1,8 +1,5 @@
 source $ZDOTDIR/completion.zsh
 
-zmodload -i zsh/parameter
-zmodload -i zsh/mathfunc
-
 for z in $ZDOTDIR/conf.d/*.zsh; do
   source "$z"
 done
@@ -11,7 +8,6 @@ source $ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 eval "$(direnv hook zsh)"
 eval "$(starship init zsh)"
-eval "$(zoxide init zsh)"
 
 zmodload zsh/net/tcp
 
@@ -23,7 +19,7 @@ source "$HOME/.asdf/asdf.sh"
 
 eval "$(gh copilot alias -- zsh)"
 eval "$(fzf --zsh)"
-#
+
 # BEGIN ANSIBLE MANAGED BLOCK
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
