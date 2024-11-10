@@ -1,295 +1,330 @@
 #!/bin/zsh
 
-[[ -d ${_Z_DATA:-$HOME/.z} ]] && {
+if [[ -d ${_Z_DATA:-$HOME/.z} ]] 
+then
   echo "ERROR: z.zsh's datafile (${_Z_DATA:-$HOME/.z}) is a directory."
-}
+fi
 
-function _common_matches() {
-  local matches=$1
-  local short
+# Check if the user has fd installed
+# If not, use find
+if ! command -v fd &> /dev/null
+then
+  function fd() {
+    find "$1" -name "$2" -type d
+  }
+fi
 
-  for x in ${(@k)matches}
+# Check if the user has fzf installed
+# If not, spawn an error
+if ! command -v fzf &> /dev/null
+then
+  echo "ERROR: z.zsh requires fzf to be installed."
+  return 1
+fi
+
+
+if [[ -z $EPOCHSECONDS ]] 
+then
+  zmodload -i zsh/datetime
+fi
+
+local function _compute_match_score() {
+  local -a query_components=( "${(s:/:)1}" )
+  local -a entry_components=( "${(s:/:)2}" )
+
+  local query_length=${#query_components}
+  local entry_length=${#entry_components}
+
+  local score=0
+
+  local min_length=$(( query_length < entry_length ? query_length : entry_length ))
+
+  for (( i = 1; i <= min_length; i++ ))
   do
-    [[ -n ${matches[$x]} && ( -z $short ||  ${#x} < ${#short} ) ]] && short=$x
-  done
-
-  [[ $short == "/" ]] && return
-
-  for x in ${(@k)matches}
-  do
-    [[ -n ${matches[$x]} && ${x:index($x, $short)} != 1 ]] && return
-  done
-
-  echo $short
-}
-
-function _output() {
-  local matches=$1
-  local best_match=$2
-  local common=$3
-
-  local list=()
-
-  if [[ -n $list ]]
-  then
-    [[ -n $common ]] && list+=(printf "%10-s %s" "common:" "$common")
-
-    for x in "${(@k)matches}"
-    do
-      [[ -n ${matches[$x]} ]] && list+=(printf "%-10s %s" "${matches[$x]}" "$x")
-    done
-
-    print -l ${(o)list[@]}
-  else
-    [[ -n $common && -z $method ]] && best_match=$common
-
-    print $best_match
-  fi
-}
-
-function _frecent() {
-  local entry_time=$2
-  local current_time=$(strftime "%s" "$EPOCHSECONDS")
-  local rank=$1
-  local dx=$(( current_time - entry_time ))
-  local result=$(( 10000 * rank * ( 3.75 / ( ( 0.0001 * dx + 1 ) + 0.25 ) ) ))
-  print $result
-}
-
-function _add_entry() {
-  local path="$*"
-
-  [[ $path = $HOME || $path = "/" ]] && return
-
-  if (( ${#_Z_EXCLUDE_DIRS} > 0 ))
-  then
-    [[ " ${_Z_EXCLUDE_DIRS[@]} " =~ " ${path} " ]] && return
-  fi
-
-  zmodload zsh/datetime
-  zmodload zsh/system
-
-  local now=$(strftime "%s" "$EPOCHSECONDS")
-  local -A rank time
-  local count=0
-
-  local lines=( ${(f)"$(< $datafile)"} )
-  lines=( ${(M)lines:#/*\|[[:digit:]]##[.,]#[[:digit:]]#\|[[:digit:]]##} )
-
-  rank[$path]=1
-  time[$path]=$now
-
-  for line in ${lines[@]}
-  do
-    local -a fields=( ${(s:|:)line} )
-    local dir="${fields[1]}"
-    local rank_val="${fields[2]}"
-    local time_val="${fields[3]}"
-
-    [[ ! -d $dir ]] && continue
-    (( rank_val == 0 )) && continue
-
-    if [[ $dir == $path ]]
+    if [[ $query_components[i] == $entry_components[i] ]]
     then
-      rank[$dir]=$(( rank_val + 1 ))
-      time[$dir]=$now
+      (( score++ ))
     else
-      rank[$dir]=$rank_val
-      time[$dir]=$time_val
+      break
     fi
-
-    (( count += rank_val ))
   done
 
-  local score=${_Z_MAX_SCORE:-9000}
-  local content=""
-  for dir in ${(k)rank}
-  do
-    local temp_rank=$(( (count > score ) ? ( rank[$dir] * 0.99 ) : rank[$dir] ))
-    content+="$dir|$temp_rank|${time[$dir]}\n"
-  done
-
-  local tempfile=$(/usr/bin/mktemp)
-  trap 'rm -f "$tempfile"' EXIT
-
-  print "$content" >> "$tempfile"
-
-  exit_status=$?
-
-  if (( exit_status == 0 ))
-  then
-    [[ -n $_Z_OWNER ]] && chown "$_Z_OWNER:$(id -ng "$_Z_OWNER")" "$tempfile"
-    /usr/bin/mv -f "$tempfile" "$datafile"
-  fi
+  print $(( score * 10 ))
 }
 
-function _z () {
+local function _update_score() {
+  local entry_score=$1
+  local entry_timestamp=$2
+  local timestamp=$3
+
+  print $(( entry_score-=(timestamp - entry_timestamp) / 86400 ))
+}
+
+local function _update_datafile() {
+  local datafile="${_Z_DATA:-$HOME/.z}"
+  local temp_file="${datafile}.tmp"
+
+  print -l "${(On)@}" > "$temp_file"
+
+  /usr/bin/mv "$temp_file" "$datafile"
+}
+
+local function _update_database() {
+  local timestamp=$(strftime "%s" "$EPOCHSECONDS")
   local datafile="${_Z_DATA:-$HOME/.z}"
 
-  [[ -L $datafile ]] &&  datafile=$(readlink "$datafile")
-
-  if [[ -z $_Z_OWNER && -f $datafile && ! -O $datafile ]]
+  if [[ ! -f $datafile ]] 
   then
-    echo "ERROR: $_Z_DATA owner does not match the current user, consider unsetting _Z_OWNER" 
-    return 1
-  fi
-
-  local add complete
-
-  zparseopts -D -E -F -- \
-    {a,-add}=add \
-    {-complete}=complete \
-    {c,-cwd}=restrict_to_cwd \
-    {e,-best-match}=print_best_match \
-    {h,-help}=print_help \
-    {l,-list}=list_matches \
-    {r,-highest-rank}=print_highest_rank \
-    {t,-recent-access}=print_recent_access \
-    {x,-remove-cwd}=remove_cwd || return
-
-  (( $#restrict_to_cwd )) && fnd="$PWD "
-  (( $#list_matches )) && lst=1
-  (( $#print_highest_rank )) && method="rank"
-  (( $#print_recent_access )) && method="recent"
-
-  if (( $#help ))
-  then
-    print "${_Z_CMD:-z} [-cehlrtx] args"
+    print "1|$1|$timestamp" > "$datafile"
     return 0
   fi
 
-  if (( $#add ))
+  if [[ ! -s $datafile ]]
   then
-    _add_entry "$@"
-  elif (( $#complete && -s $datafile ))
-  then
-    local q="${2:2}"
-    local imatch=0
+    print "1|$1|$timestamp" >> "$datafile"
+    return 0
+  fi
 
-    [[ $q == ${q:1} ]] && imatch=1
-    q="${q// /.*}"
+  local found=0
+  local query="$1"
+  local -a new_lines
+  for line in "${(f)"$(<$datafile)"}"
+  do
+    # Check that the line is in the correct format
+    [[ $line == (#b)([0-9]##)\|(*[^|])\|([0-9]##) ]] || continue
 
-    local lines=( ${(f)"$(< $datafile)"} )
-    for line in ${lines[@]}
-    do
-      local dir="${line%%|*}"
+    local fields=( "${(s:|:)line}" )
 
-      if (( imatch != 0 ))
-      then
-        [[ "${dir:1}" =~ $q ]] && print "$dir"
-      else 
-        [[ "$dir" =~ $q ]] && print "$dir"
-      fi
-    done
-  else
-    local restrict_to_cwd list_matches print_best_match print_help print_highest_rank print_recent_access remove_cwd
+    local entry_path="${fields[2]}"
 
-    if (( $#remove_cwd ))
+    [[ ! -d $entry_path ]] && continue
+
+    local entry_timestamp=${fields[3]}
+    local entry_score=$(_update_score ${fields[1]} $entry_timestamp $timestamp)
+
+    if [[ $entry_path == $query ]]
     then
-      sed -i -e "\:^${PWD}|.*:d" "$datafile"
+      found=1
+      entry_score=$(( entry_score < 0 ? 0 : entry_score ))
+      (( entry_score+=1 ))
+      entry_timestamp=$timestamp
+    fi
+
+    (( entry_score < 1 )) && continue
+
+    new_lines+=( "$entry_score|$entry_path|$entry_timestamp" )
+  done
+
+  if (( ! found ))
+  then
+    new_lines+=( "1|$query|$timestamp" )
+  fi
+
+  _update_datafile "${(@)new_lines}"
+
+  return 0
+}
+
+local function _search_database() {
+  local datafile="${_Z_DATA:-$HOME/.z}"
+  [[ -s $datafile ]] || return
+
+  local query="$1"
+  local -a matches
+  local timestamp=$(strftime "%s" "$EPOCHSECONDS")
+
+  local -a new_lines
+  for line in "${(f)"$(<$datafile)"}"
+  do
+    [[ $line == (#b)([0-9]##)\|(*[^|])\|([0-9]##) ]] || continue
+
+    local fields=( "${(s:|:)line}" )
+    local entry_path="${fields[2]}"
+
+    [[ ! -d $entry_path ]] && continue
+
+    if [[ $entry_path == $query ]]
+    then
+      print -r -- "$entry_path"
       return 0
     fi
 
-    local fnd lst method
-
-    local last="${@:-1}"
-
-    [[ -n $fnd && $fnd != "$PWD " ]] || lst=1
-
-    if [[ $last == /* && -d $last && -z $lst ]]
+    if [[ $entry_path == *$query* ]]
     then
-      builtin cd "$last"
-      return
+      local entry_score=$(_update_score ${fields[1]} ${fields[3]} $timestamp)
+      local match_score=$(_compute_match_score "$query" "$entry_path")
+      local score=$(( entry_score + match_score ))
+
+      matches+=( "$score|$entry_path" )
     fi
+  done
 
-    [[ -f $datafile ]] || return
+  if (( ${#matches} > 0 ))
+  then
+    print -r -- "${${(@On)matches}[1]#*|}"
+  fi
 
-    local cd
-    local -A matches imatches
-    local hi_rank=-99999999 ihi_rank=-99999999
-    local best_match ibest_match
-    
-    local lines=( ${(f)"$(< $datafile)"} )
+  return 0
+}
 
-    for line in ${lines[@]}
-    do
-      local fields=( "${(s:|:)line}" )
-      local dir="${fields[1]}"
-      local rank="${fields[2]}"
-      local time="${fields[3]}"
+local function _remove_entry() {
+  local datafile="${_Z_DATA:-$HOME/.z}"
+  [[ -s $datafile ]] || return 0
 
-      case $method in
-        rank) rank=$rank ;;
-        recent) rank=$(( time - t )) ;;
-        *) rank=$(_frecent $rank $time) ;;
-      esac
+  local timestamp=$(strftime "%s" "$EPOCHSECONDS")
+  local query="$1"
+  local -a new_lines
+  for line in "${(f)"$(<$datafile)"}"
+  do
+    [[ $line == (#b)([0-9]##)\|(*[^|])\|([0-9]##) ]] || continue
 
-      if [[ $dir =~ $fnd ]]
-      then
-        matches[$dir]=$rank
-      elif [[ ${dir:1} =~ ${fnd:1} ]]
-      then
-        imatches[$dir]=$rank
-      fi
+    local fields=( "${(s:|:)line}" )
+    local entry_path="${fields[2]}"
 
-      if [[ -n ${matches[$dir]} && ${matches[$dir]} -gt $hi_rank ]]
-      then
-        best_match=$dir
-        hi_rank=${matches[$dir]}
-      elif [[ -n ${imatches[$dir]} && ${imatches[$dir]} -gt $ihi_rank ]]
-      then
-        ibest_match=$dir
-        ihi_rank=${imatches[$dir]}
-      fi
-    done
+    [[ ! -d $entry_path ]] && continue
+    [[ $entry_path == $query ]] && continue
 
-    if [[ -n $best_match ]]
+    local entry_timestamp=${fields[3]}
+    local entry_score=$(_update_score ${fields[1]} $entry_timestamp $timestamp)
+
+    new_lines+=( "$entry_score|$entry_path|$entry_timestamp" )
+  done
+
+  _update_datafile "${(@)new_lines}"
+
+  return 0
+}
+
+local function _change_directory() {
+  local output
+  zparseopts -D -F -K --\
+    {o,-output}=output || return 1
+
+  local cmd="cd"
+  if (( ${#output} ))
+  then
+    cmd="print -r --"
+  fi
+
+  if [[ -z $@ ]] 
+  then
+    eval "$cmd ${HOME}" 
+    return 0
+  fi
+
+  if [[ $1 == $HOME || $1 == ~ || $1 == - || $1 == / ]]
+  then
+    eval "$cmd $1"
+    return 0
+  fi
+
+  local query="${1/#\~/$HOME}"
+  if [[ -d $query ]]
+  then
+    query="${PWD}/${query}"
+    eval "$cmd $query"
+    return $(_update_database "${query}")
+  fi
+
+  if (( ${#use_cwd} ))
+  then
+    base_path="$PWD"
+  else
+    base_path="/"
+  fi
+
+  local match=$(_search_database "$query")
+  if [[ -n $match ]]
+  then
+    eval "$cmd $match"
+    return $(_update_database "${match}")
+  else
+    local base_dir
+
+    cd_path=$(fd "$base_path" --type=directory --full-path "$base_path" | fzf --no-multi --query="$query")
+    eval "$cmd $cd_path"
+    return $(_update_database "${cd_path}")
+  fi
+
+  print "z: no such path: $query" >&2
+  return 1
+}
+
+local function _print_help(){
+  cat <<EOF
+Usage: z [options] [directory]
+
+Options:
+  -a, --add DIRECTORY    Add DIRECTORY to the database
+  -c, --complete         Print the list of directories in the database
+  -r, --remove           Remove the directory from the database
+  -p, --cwd              Use the current working directory as the base path
+  -h, --help             Print this help message
+  -o, --output           Output the directory to stdout instead of changing to it
+
+If no arguments are given, z will change to the home directory.
+EOF
+}
+
+local function _complete() {
+  local query="${1}"
+
+  local -a matches
+  local datafile="${_Z_DATA:-$HOME/.z}"
+  [[ -s $datafile ]] || return 1
+
+  for line in "${(f)"$(<$datafile)"}"
+  do
+    [[ $line == (#b)([0-9]##)\|(*[^|])\|([0-9]##) ]] || continue
+
+    local fields=( "${(s:|:)line}" )
+    local entry_path="${fields[2]}"
+
+    [[ ! -d $entry_path ]] && continue
+
+    if [[ $entry_path == *$query* ]]
     then
-      cd=$(_output $matches $best_match $(_common_matches $matches))
-    elif [[ -n $ibest_match ]]
-    then
-      cd=$(_output $imatches $ibest_match $(_common_matches $imatches))
-    else
-      return 1
+      matches+=( "$entry_path" )
     fi
+  done
 
-    if [[ $cd ]]
-    then
-      if [[ $#print_best_match ]]
-      then
-        print "$cd"
-      else
-        builtin cd "$cd"
-      fi
-    fi
+  local -a directories=( "${(@f)"$(fd . --type=directory --max-depth=1)"}" )
+
+  compadd -x '%U%BDatabase%b%u' -J 'database' -a matches
+  compadd -x '%U%BCurrent Directory%b%u' -J 'current_directory' -a directories
+}
+
+compdef _complete ${_Z_CMD:-z}
+
+local function _z () {
+  local add complete remove use_cwd help output
+
+  zparseopts -D -F -K --\
+    {a,-add}:=add \
+    {c,-complete}:=complete \
+    {r,-remove}:=remove \
+    {p,-cwd}=use_cwd \
+    {o,-output}=output \
+    {h,-help}=help || return 1
+
+  if (( ${#help} ))
+  then
+    _print_help
+    return 0
+  elif (( ${#complete} ))
+  then
+    _complete "${complete[-1]}"
+    return 0
+  elif (( ${#remove} ))
+  then
+    return $(_remove_entry "${remove[-1]}")
+  elif (( ${#add} ))
+  then
+    return $(_update_database "${add[-1]}")
+  else
+    _change_directory ${output} "${@}"
+    return 0
   fi
 }
 
 alias ${_Z_CMD:-z}='_z 2>&1'
-
-[[ $_Z_NO_RESOLVE_SYMLINKS ]] || _Z_RESOLVE_SYMLINKS="-P"
-
-if [[ -z $_Z_NO_PROMPT_COMMAND ]]
-then
-  if [[ $_Z_NO_RESOLVE_SYMLINKS ]]
-  then
-    function _z_precmd() {
-      (_z --add "${PWD:a}" &)
-      : $RANDOM
-    }
-  else
-    function _z_precmd() {
-      (_z --add "${PWD:A}" &)
-      : $RANDOM
-    }
-  fi
-
-  [[ -n ${precmd_functions[(r)_z_precmd]} ]] || precmd_functions[$(($#precmd_functions+1))]=_z_precmd
-fi
-
-function _z_zsh_tab_completion() {
-  local compl
-  read -l compl
-  reply=( "$(_z --complete "$compl")" )
-}
-compctl -U -K _z_zsh_tab_completion _z
