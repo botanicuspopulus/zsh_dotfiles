@@ -42,6 +42,7 @@ if (( $+commands[fd] )); then
 fi
 
 alias -s {c,h,cpp,py,sh,md,txt,conf,ini,yml,yaml,toml,xml,html,css,js,json,sql}=nvim
+alias -s {pdf,djvu}=zathura
 
 # mask built-ins with better defaults
 alias ping='ping -c 5'
