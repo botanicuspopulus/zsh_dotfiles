@@ -1,6 +1,10 @@
 bindkey '^Y' accept-and-hold
 bindkey '^Q' push-line-or-edit
 
+bindkey '^E' autosuggest-accept
+bindkey '^ ' autosuggest-execute
+bindkey '^K' autosuggest-clear
+
 # Accept autosuggestions with shift+tab
 bindkey '^I' complete-word        # tab         | complete
 

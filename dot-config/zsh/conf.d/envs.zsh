@@ -10,8 +10,8 @@ setopt LIST_PACKED
 setopt NO_LIST_TYPES
 setopt NO_CLOBBER
 setopt NO_CASE_GLOB
-setopt NOGLOBDOTS         # Don't match dotfiles
-setopt NOSHWORDSPLIT      # Use zsh style word splitting
+setopt NO_GLOB_DOTS         # Don't match dotfiles
+setopt NO_SH_WORD_SPLIT      # Use zsh style word splitting
 setopt NUMERIC_GLOB_SORT
 
 # In order to use #, ~, and ^ for filename generation grep word 

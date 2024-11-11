@@ -22,7 +22,6 @@ then
   return 1
 fi
 
-
 if [[ -z $EPOCHSECONDS ]] 
 then
   zmodload -i zsh/datetime
@@ -266,7 +265,7 @@ If no arguments are given, z will change to the home directory.
 EOF
 }
 
-local function _complete() {
+local function _z_complete() {
   local query="${1}"
 
   local -a matches
@@ -288,13 +287,11 @@ local function _complete() {
     fi
   done
 
-  local -a directories=( "${(@f)"$(fd . --type=directory --max-depth=1)"}" )
-
-  compadd -x '%U%BDatabase%b%u' -J 'database' -a matches
-  compadd -x '%U%BCurrent Directory%b%u' -J 'current_directory' -a directories
+  if (( ${#matches} > 0 ))
+  then
+    print -l -- "${(@)matches}"
+  fi
 }
-
-compdef _complete ${_Z_CMD:-z}
 
 local function _z () {
   local add complete remove use_cwd help output
@@ -313,7 +310,7 @@ local function _z () {
     return 0
   elif (( ${#complete} ))
   then
-    _complete "${complete[-1]}"
+    _z_complete "${complete[-1]}"
     return 0
   elif (( ${#remove} ))
   then

@@ -5,6 +5,7 @@ for z in $ZDOTDIR/conf.d/*.zsh; do
 done
 
 source $ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $ZDOTDIR/plugins/z.zsh
 
 eval "$(direnv hook zsh)"
