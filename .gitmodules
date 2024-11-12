@@ -10,3 +10,6 @@
 [submodule "zsh-easy-motion"]
 	path = dot-config/zsh/plugins/zsh-easy-motion
 	url = https://github.com/IngoMeyer441/zsh-easy-motion
+[submodule "fancy-ctrl-z"]
+	path = dot-config/zsh/plugins/fancy-ctrl-z
+	url = https://github.com/mdumitru/fancy-ctrl-z.git
