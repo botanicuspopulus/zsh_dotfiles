@@ -1,9 +1,11 @@
 bindkey '^Y' accept-and-hold
 bindkey '^Q' push-line-or-edit
 
-bindkey '^E' autosuggest-accept
-bindkey '^ ' autosuggest-execute
-bindkey '^K' autosuggest-clear
+bindkey -M viins '^E' autosuggest-accept
+bindkey -M viins '^ ' autosuggest-execute
+bindkey -M viins '^K' autosuggest-clear
+
+bindkey -M vicmd ' ' vi-easy-motion
 
 # Accept autosuggestions with shift+tab
 bindkey '^I' complete-word        # tab         | complete

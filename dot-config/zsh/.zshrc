@@ -6,6 +6,7 @@ done
 
 source $ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $ZDOTDIR/plugins/zsh-easy-motion/easy_motion.plugin.zsh
 source $ZDOTDIR/plugins/z.zsh
 
 eval "$(direnv hook zsh)"

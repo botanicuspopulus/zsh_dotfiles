@@ -7,3 +7,6 @@
 [submodule "zsh-autosuggestions"]
 	path = dot-config/zsh/plugins/zsh-autosuggestions
 	url = https://github.com/zsh-users/zsh-autosuggestions.git
+[submodule "zsh-easy-motion"]
+	path = dot-config/zsh/plugins/zsh-easy-motion
+	url = https://github.com/IngoMeyer441/zsh-easy-motion
