@@ -40,9 +40,9 @@ local function _compute_match_score() {
 
   for (( i = 1; i <= min_length; i++ ))
   do
-    if [[ $query_components[i] == $entry_components[i] ]]
+    if [[ $query_components[-i] == $entry_components[-i] ]]
     then
-      (( score++ ))
+      (( score += i ))
     else
       break
     fi
