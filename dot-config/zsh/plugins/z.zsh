@@ -160,7 +160,25 @@ local function _search_database() {
 
   if (( ${#matches} > 0 ))
   then
-    print -r -- "${${(@On)matches}[1]#*|}"
+    local -a sorted_matches=( "${(@On)matches}" )
+    local best_match=""
+
+    for match in "${sorted_matches[@]}"
+    do
+      local path="${match#*|}"
+      if [[ $path != ${PWD} ]]
+      then
+        best_match=$path
+        break
+      fi
+    done
+
+    if [[ -n $best_match ]]
+    then
+      print -r -- "${best_match%%$query*}$query"
+      return 0
+    fi
+
   fi
 
   return 0
