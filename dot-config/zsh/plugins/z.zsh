@@ -1,4 +1,8 @@
 #!/bin/zsh
+#
+# This script provides a directory jumping tool similar to `z` or `zoxide`.
+# It maintains a database of directories and their usage frequency, allowing
+# quick navigation to frequently visited directories.
 
 if [[ -d ${_Z_DATA:-$HOME/.z} ]] 
 then
@@ -19,13 +23,16 @@ then
   return 1
 fi
 
+# Load the `zsh/datetime` module if `EPOCHSECONDS` is not available.
 if [[ -z $EPOCHSECONDS ]] 
 then
   zmodload -i zsh/datetime
 fi
 
+# Declare an associative array to store directory entries.
 typeset -A _z_entries
 
+# Function to load entries from the datafile into the associative array.
 local function _load_entries() {
   local datafile="${_Z_DATA:-$HOME/.z}"
 
@@ -49,57 +56,53 @@ local function _load_entries() {
   return 0
 }
 
+# Function to save entries from the associative array to the datafile.
 local function _save_entries() {
   local datafile="${_Z_DATA:-$HOME/.z}"
-  : >! "$datafile"
+  : >! "$datafile" || { print "z: error clearing $datafile" >&2; return 1 }
 
-  if [[ $? -ne 0 ]]
-  then
-    print "z: error writing to $datafile" >&2
-    return 1
-  fi
 
   local timestamp=$(strftime "%s" "$EPOCHSECONDS")
   for entry in "${(@k)_z_entries}"
   do
     local fields=( "${(s:|:)_z_entries[$entry]}" )
-    local entry_timestamp=${fields[2]}
-    local entry_score=$(( fields[1] - (timestamp - entry_timestamp) / ${_Z_AGE_RATE:-604800} ))
+    local entry_score=$(( fields[1] - (timestamp - fields[2]) / ${_Z_AGE_RATE:-604800} ))
 
-    if (( entry_score < 0 ))
-    then
-      unset _z_entries[$entry]
-      continue
-    fi
+    (( entry_score < 0 )) && unset _z_entries[$entry] && continue
 
-    print -r -- "${entry_score}|${entry_timestamp}|${entry//\"/}" >> "$datafile"
+    print -r -- "${entry_score}|${fields[2]}|${entry//\"/}" >> "$datafile"
   done
 }
 
+# Function to compute the match score for a given query and entry.
 local function _compute_match_score() {
-  local -a query_components=( "${(s:/:)1}" )
-  local -a entry_components=( "${(s:/:)2}" )
-
-  local query_length=${#query_components}
-  local entry_length=${#entry_components}
+  local query="$1"
+  local entry="$2"
+  local -a query_components=( "${(s: :)query}" )
+  local -a entry_components=( "${(s:/:)entry}" )
 
   local score=0
 
-  local min_length=$(( query_length < entry_length ? query_length : entry_length ))
-
-  for (( i = 1; i <= min_length; i++ ))
+  for q in $query_components
   do
-    if [[ $query_components[-i] == $entry_components[-i] ]]
-    then
-      (( score += i ))
-    else
-      break
-    fi
+    for (( i = 1; i <= ${#entry_components}; i++ ))
+    do
+      [[ $q == $entry_components[i] ]] && (( score += i * 10 ))
+    done
   done
 
-  print $(( score * 10 ))
+  local fields=( "${(s:|:)_z_entries[$entry]}" )
+  local entry_score=${fields[1]}
+  local entry_timestamp=${fields[2]}
+  local timestamp=$(strftime "%s" "$EPOCHSECONDS")
+  local age=$(( (timestamp - entry_timestamp) / ${_Z_AGE_RATE:-604800} ))
+
+  (( score += entry_score * 2 - age))
+
+  print $score
 }
 
+# Function to update the database with a new or existing entry.
 local function _update_database() {
   local query="$1"
   local timestamp=$(strftime "%s" "$EPOCHSECONDS")
@@ -109,31 +112,32 @@ local function _update_database() {
   if [[ -n ${_z_entries[$query]} ]]
   then
     local fields=( "${(s:|:)_z_entries[$query]}" )
-    local entry_score=$(( fields[1] + 1 ))
-    _z_entries[$query]="${entry_score}|${timestamp}"
+    _z_entries[$query]="$(( fields[1] + 1 ))|$timestamp"
   else
-    _z_entries[$query]="1|${timestamp}"
+    _z_entries[$query]="1|$timestamp"
   fi
 
   _save_entries
 }
 
+# Function to search the database for a matching entry.
 local function _search_database() {
   local query="$1"
   local timestamp=$(strftime "%s" "$EPOCHSECONDS")
 
   _load_entries
 
+  local -a query_components=( "${(s: :)query}" )
   local -a matches
   for entry in "${(@k)_z_entries}"
   do
-    if [[ $entry == *$query* ]]
-    then
-      local fields=( "${(s:|:)_z_entries[$entry]}" )
-      local match_score=$(_compute_match_score "$query" "$entry")
-      local score=$(( ${fields[1]} + match_score ))
-      matches+=( "$score|$entry" )
-    fi
+    local match=true
+    for q in $query_components
+    do
+      [[ $entry != *$q* ]] && match=false && break
+    done
+
+    $match && matches+=( "$(_compute_match_score "$query" "$entry")|$entry" )
   done
 
   [[ -z ${matches} ]] && return
@@ -142,21 +146,23 @@ local function _search_database() {
   for match in "${(@On)matches}"
   do
     best_match="${match#*|}"
+    local component=${query_components[-1]}
 
-    if [[ $best_match != *$query ]] && best_match="${best_match%%$query*}$query"
-
+    [[ $best_match != *$component ]] && best_match="${best_match%%$component*}$component"
     [[ $best_match != ${PWD} ]] && break
   done
 
   print -r -- "${best_match//\"/}"
 }
 
+# Function to remove an entry from the database.
 local function _remove_entry() {
   _load_entries
-  unset _z_entries["$1"]
+  unset _z_entries[$1]
   _save_entries
 }
 
+# Function to change the current directory based on the query.
 local function _change_directory() {
   if [[ -z $@ ]] 
   then
