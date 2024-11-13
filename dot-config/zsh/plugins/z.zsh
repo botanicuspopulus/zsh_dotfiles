@@ -34,33 +34,22 @@ typeset -A _z_entries
 
 # Function to load entries from the datafile into the associative array.
 local function _load_entries() {
-  local datafile="${_Z_DATA:-$HOME/.z}"
+  local datafile=""
 
-  if [[ ! -f $datafile ]]
-  then
-    touch $datafile
-    return 0
-  fi
+  [[ ! -f ${_Z_DATA:-$HOME/.z} ]] && touch ${_Z_DATA:-$HOME/.z}
 
-  for line in "${(f)"$(<$datafile)"}"
-  do
-    [[ $line = (#b)([0-9]##)\|([0-9]##)\|(*) ]] || continue
-
+  for line in "${(f)$(<${_Z_DATA:-$HOME/.z})}"; do
     local fields=( "${(s:|:)line}" )
-
-    [[ ! -d ${fields[3]} ]] && continue
-
-    _z_entries[${fields[3]}]="${fields[1]}|${fields[2]}"
+    _z_entries[$fields[3]]="$fields[1]|$fields[2]"
   done
-
-  return 0
 }
 
 # Function to save entries from the associative array to the datafile.
 local function _save_entries() {
-  local datafile="${_Z_DATA:-$HOME/.z}"
-  : >! "$datafile" || { print "z: error clearing $datafile" >&2; return 1 }
-
+  : >! "${_Z_DATA:-$HOME/.z}" || {
+    print "z: error clearing ${_Z_DATA:-$HOME/.z}" >&2
+    return 1
+  }
 
   local timestamp=$(strftime "%s" "$EPOCHSECONDS")
   for entry in "${(@k)_z_entries}"
@@ -70,7 +59,7 @@ local function _save_entries() {
 
     (( entry_score < 0 )) && unset _z_entries[$entry] && continue
 
-    print -r -- "${entry_score}|${fields[2]}|${entry//\"/}" >> "$datafile"
+    print -r -- "${entry_score}|${fields[2]}|${entry//\"/}" >> "${_Z_DATA:-$HOME/.z}"
   done
 }
 
@@ -78,26 +67,17 @@ local function _save_entries() {
 local function _compute_match_score() {
   local query="$1"
   local entry="$2"
-  local -a query_components=( "${(s: :)query}" )
   local -a entry_components=( "${(s:/:)entry}" )
 
   local score=0
 
-  for q in $query_components
-  do
-    for (( i = 1; i <= ${#entry_components}; i++ ))
-    do
-      [[ $q == $entry_components[i] ]] && (( score += i * 10 ))
-    done
-  done
+  [[ -n $entry_components[(r)$query] ]] && (( score += 10 ))
 
   local fields=( "${(s:|:)_z_entries[$entry]}" )
-  local entry_score=${fields[1]}
-  local entry_timestamp=${fields[2]}
   local timestamp=$(strftime "%s" "$EPOCHSECONDS")
-  local age=$(( (timestamp - entry_timestamp) / ${_Z_AGE_RATE:-604800} ))
+  local age=$(( (timestamp - fields[2]) / ${_Z_AGE_RATE:-604800} ))
 
-  (( score += entry_score * 2 - age))
+  (( score += fields[1] * 2 - age))
 
   print $score
 }
@@ -122,33 +102,31 @@ local function _update_database() {
 
 # Function to search the database for a matching entry.
 local function _search_database() {
-  local query="$1"
   local timestamp=$(strftime "%s" "$EPOCHSECONDS")
 
   _load_entries
 
-  local -a query_components=( "${(s: :)query}" )
-  local -a matches
-  for entry in "${(@k)_z_entries}"
-  do
-    local match=true
-    for q in $query_components
-    do
-      [[ $entry != *$q* ]] && match=false && break
-    done
+  local -a query_components=( "${(s: :)1}" )
+  local -A matches
 
-    $match && matches+=( "$(_compute_match_score "$query" "$entry")|$entry" )
+  for query in $query_components; do
+    for match in "${(@Mk)_z_entries:#*$q*}"; do
+      (( matches[$match]+=$(_compute_match_score "$query" "$match") ))
+    done
   done
 
   [[ -z ${matches} ]] && return
 
-  local best_match=""
-  for match in "${(@On)matches}"
-  do
+  local sorted_matches=( "${(@On)${(@k)matches/(#m)*/$matches[$MATCH]|$MATCH}}" )
+  local best_match
+  local component="${query_components[-1]}"
+  for match in "${sorted_matches}"; do
     best_match="${match#*|}"
-    local component=${query_components[-1]}
 
-    [[ $best_match != *$component ]] && best_match="${best_match%%$component*}$component"
+    [[ $best_match != *$component ]] && {
+      best_match="${best_match%%$component*}$component"
+    }
+
     [[ $best_match != ${PWD} ]] && break
   done
 
@@ -164,29 +142,21 @@ local function _remove_entry() {
 
 # Function to change the current directory based on the query.
 local function _change_directory() {
-  if [[ -z $@ ]] 
-  then
-    cd "${HOME}" 
-    return
-  fi
-
-  if [[ $1 == $HOME || $1 == ~ || $1 == - || $1 == / ]]
-  then
-    cd "$1"
-    return
-  fi
+  [[ -z $@ ]] && cd "${HOME}" && return
 
   local query="${1/#\~/$HOME}"
-  if [[ -d $query ]]
-  then
+  local skip_values=( "$HOME" "-" "/" )
+
+  (( ${#skip_values[(r)$query]} > 0 )) && cd "$query" && return 
+
+  if [[ -d $query ]]; then
     cd "${query}"
     _update_database "${PWD}"
     return
   fi
 
   local match=$(_search_database "$query")
-  if [[ -n $match ]]
-  then
+  if [[ -n $match ]]; then
     cd "${match}"
     _update_database "${PWD}"
     return
@@ -228,12 +198,7 @@ local function _z_complete() {
 
   _load_entries
 
-  local -a matches
-  for path in "${(@k)_z_entries}"
-  do
-    [[ $path == *$query* ]] && matches+=( "$path" )
-  done
-
+  local -a matches=( ${(Mk)_z_entries:#*$query*} )
   [[ -z ${matches} ]] && return
 
   local selected=$(print -l -- "${(@)matches}" \
