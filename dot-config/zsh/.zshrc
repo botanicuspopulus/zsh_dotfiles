@@ -4,6 +4,8 @@ for z in $ZDOTDIR/conf.d/*.zsh; do
   source "$z"
 done
 
+source "$HOME/.asdf/asdf.sh"
+
 source $ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $ZDOTDIR/plugins/zsh-easy-motion/easy_motion.plugin.zsh
@@ -17,8 +19,6 @@ zmodload zsh/net/tcp
 [[ -z "$TMUX" ]] && tmux -f $XDG_CONFIG_HOME/tmux/tmux.conf
 
 [[ -r "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
-
-source "$HOME/.asdf/asdf.sh"
 
 eval "$(gh copilot alias -- zsh)"
 eval "$(fzf --zsh)"
