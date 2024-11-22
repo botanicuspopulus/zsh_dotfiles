@@ -4,7 +4,7 @@
 # It maintains a database of directories and their usage frequency, allowing
 # quick navigation to frequently visited directories.
 
-if [[ -d ${_Z_DATA:-$HOME/.z} ]] 
+if [[ -d ${_Z_DATA:-$HOME/.z} ]]
 then
   echo "ERROR: z.zsh's datafile (${_Z_DATA:-$HOME/.z}) is a directory."
 fi
@@ -24,7 +24,7 @@ then
 fi
 
 # Load the `zsh/datetime` module if `EPOCHSECONDS` is not available.
-if [[ -z $EPOCHSECONDS ]] 
+if [[ -z $EPOCHSECONDS ]]
 then
   zmodload -i zsh/datetime
 fi
@@ -117,14 +117,14 @@ local function _search_database() {
 
   [[ -z ${matches} ]] && return
 
-  local sorted_matches=( "${(@On)${(@k)matches/(#m)*/$matches[$MATCH]|$MATCH}}" )
+  local sorted_matches=( ${(@On)${(@k)matches/(#m)*/$matches[$MATCH]|$MATCH}} )
   local best_match
   local component="${query_components[-1]}"
-  for match in "${sorted_matches}"; do
+  for match in ${sorted_matches[@]}; do
     best_match="${match#*|}"
 
     [[ $best_match != *$component ]] && {
-      best_match="${best_match%%$component*}$component"
+      best_match="${best_match%%$component*}/$component"
     }
 
     [[ $best_match != ${PWD} ]] && break
@@ -147,7 +147,7 @@ local function _change_directory() {
   local query="${1/#\~/$HOME}"
   local skip_values=( "$HOME" "-" "/" )
 
-  (( ${#skip_values[(r)$query]} > 0 )) && cd "$query" && return 
+  (( ${#skip_values[(r)$query]} > 0 )) && cd "$query" && return
 
   if [[ -d $query ]]; then
     cd "${query}"
