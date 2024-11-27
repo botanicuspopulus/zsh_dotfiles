@@ -110,7 +110,7 @@ local function _search_database() {
   local -A matches
 
   for query in $query_components; do
-    for match in "${(@Mk)_z_entries:#*$q*}"; do
+    for match in ${(@Mk)_z_entries:#*$query*}; do
       (( matches[$match]+=$(_compute_match_score "$query" "$match") ))
     done
   done
@@ -162,10 +162,21 @@ local function _change_directory() {
     return
   fi
 
-  local cd_path=$(fd "$query" "/" --type=directory --max-results 100 \
+  SEARCH_PATHS=( /usr /etc /home /opt /run /mnt )
+
+  local cd_path=$(fd --type=directory \
+                  --search-path "/usr" \
+                  --search-path "/etc" \
+                  --search-path "/home" \
+                  --search-path "/opt" \
+                  --search-path "/run" \
+                  --search-path "/mnt" \
+                  --absolute-path \
+                  --full-path \
                   | fzf --no-multi \
                         --query "$query" \
                         --height=40% \
+                        --tiebreak='end,index' \
                         --layout=reverse \
                         --scheme=path \
                         --exact \
