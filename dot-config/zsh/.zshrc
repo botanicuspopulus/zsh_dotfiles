@@ -11,6 +11,7 @@ source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $ZDOTDIR/plugins/zsh-easy-motion/easy_motion.plugin.zsh
 source $ZDOTDIR/plugins/fancy-ctrl-z/fancy-ctrl-z.zsh
 source $ZDOTDIR/plugins/z.zsh
+source $ZDOTDIR/plugins/fancy-ctrl-z/fancy-ctrl-z.zsh
 
 eval "$(direnv hook zsh)"
 eval "$(starship init zsh)"
