@@ -26,4 +26,7 @@ WORDCHARS=''
 # Path config
 # Note: Configuring $PATH should preferably be done in the ~/.zshrc file in order that zsh plugins are also provisioned
 # with exeutables from $PATH. Entries listed here may not be visible from zsh plugins and source scripts
-path=( $path $HOME/.cargo/bin )
+path=( $path 
+  $HOME/.cargo/bin 
+  $HOME/go/bin
+)
