@@ -16,10 +16,6 @@ setopt completealiases    # don't expand aliases _before_ completion has finishe
 setopt LIST_AMBIGUOUS     # Complete as much of a completion until it gets ambiguous
 setopt HASH_LIST_ALL      # Hash everything before completion
 
-autoload -Uz compinit 
-compinit
-
-
 # General format of zstyle: ":completion:<func>:<completer>:<command>:<argument>:<tag>"
 # <func> is the name of the function that is being called
 # <completer> is the name of the completer that is being used
