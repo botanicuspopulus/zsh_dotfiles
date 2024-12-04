@@ -2,3 +2,5 @@
 .zplugins.zsh
 .zcompdump.*
 .zkbd
+dot-config/zsh/.antidote
+dot-config/zsh/.zsh_plugins.zsh
