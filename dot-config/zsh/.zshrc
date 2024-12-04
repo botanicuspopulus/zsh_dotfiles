@@ -15,6 +15,7 @@ zmodload zsh/net/tcp
 
 eval "$(gh copilot alias -- zsh)"
 eval "$(fzf --zsh)"
+eval "$(zoxide init zsh)"
 
 # BEGIN ANSIBLE MANAGED BLOCK
 export PYENV_ROOT="$HOME/.pyenv"
