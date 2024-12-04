@@ -14,7 +14,6 @@ zmodload zsh/net/tcp
 [[ -r "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
 
 eval "$(gh copilot alias -- zsh)"
-eval "$(fzf --zsh)"
 eval "$(zoxide init zsh)"
 
 # BEGIN ANSIBLE MANAGED BLOCK
