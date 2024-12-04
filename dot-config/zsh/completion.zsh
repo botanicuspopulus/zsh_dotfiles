@@ -1,8 +1,6 @@
 # vim ft=zsh
 autoload -Uz vcs_info
 
-fpath=($ZDOTDIR/plugins/zsh-completions/src $fpath)
-
 zmodload -i zsh/complist
 
 # Don't prompt for a huge list, page it!
