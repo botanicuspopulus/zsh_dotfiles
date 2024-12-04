@@ -40,6 +40,8 @@ bindkey -M vicmd '^q' push-line
 # file rename magicks
 bindkey "^[m" copy-prev-shell-word
 
+zmodload -i zsh/complist
+
 bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'j' vi-down-line-or-history
