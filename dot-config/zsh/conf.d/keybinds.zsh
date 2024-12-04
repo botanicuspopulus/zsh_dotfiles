@@ -8,7 +8,6 @@ bindkey -M viins '^K' autosuggest-clear
 bindkey -M vicmd ' ' vi-easy-motion
 
 # Accept autosuggestions with shift+tab
-bindkey '^I' complete-word        # tab         | complete
 
 ### Fix slowness of pastes with zsh-syntax-highlighting
 # Still needed as of 2023-06-24!
