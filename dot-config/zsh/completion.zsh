@@ -33,8 +33,8 @@ zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' completer _expand _complete _ignored _approximate _extensions
 
 zstyle ':completion:*'                            verbose yes
-zstyle ':completion:*:descriptions'               format '%F{green}%U%B%d%b%u%f'
-zstyle ':completion:*:corrections'                format '%F{yellow}%U%B%d (errors:%e)%b%u'
+zstyle ':completion:*:descriptions'               format '%F{green}%S%B%d%b%s%f'
+zstyle ':completion:*:corrections'                format '%F{yellow}%S%B%d (errors:%e)%b%s'
 zstyle ':completion:*:correct:*'                  original true
 zstyle ':completion:*:matches:*'                  group 'yes'
 zstyle ':completion:*'                            group-name '' # Group completions by type (file, external command, etc)
@@ -59,7 +59,7 @@ zstyle ':completion:*:messages'                   format '%d'
 zstyle ':completion:*:options'                    auto-description '%d'
 zstyle ':completion:*:options'                    description 'yes' # Describe optioins in full
 
-zstyle ':completion:*:warnings'                   format '%F{orange}No matches for: %d'
+zstyle ':completion:*:warnings'                   format '%F{orange}%SNo matches for%s: %d%f'
 
 # Define files to ignore for zcompile
 zstyle ':completion:*:*:zcompile:*'               ignored-patterns '(*~|*.zwc)'
