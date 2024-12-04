@@ -1,3 +1,5 @@
+setopt VI
+
 bindkey -v
 export KEYTIMEOUT=1
 
