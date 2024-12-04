@@ -50,5 +50,3 @@ bindkey -M menuselect '^xg' clear-screen
 bindkey -M menuselect '^xh' accept-and-hold
 bindkey -M menuselect '^xn' accept-and-infer-next-history
 bindkey -M menuselect '^xu' undo
-
-bindkey -M viins '\C-i' complete-word
