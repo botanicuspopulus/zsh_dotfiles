@@ -2,6 +2,8 @@ mattmc3/ez-compinit
 
 zimfw/asdf
 
+Aloxaf/fzf-tab
+
 mdumitru/fancy-ctrl-z
 
 wfxr/forgit

@@ -8,7 +8,7 @@ unsetopt MENU_COMPLETE    # Do not auto select the first completion entry
 unsetopt FLOW_CONTROL     # Disable start/stop characters in shell editor
 unsetopt PATHDIRS
 
-setopt AUTO_MENU          # show completion menu on successive tab press
+# setopt AUTO_MENU          # show completion menu on successive tab press
 setopt COMPLETE_IN_WORD   # Complete from both ends
 setopt ALWAYS_TO_END      # Move cursor to the end of the complete word
 setopt AUTO_PARAM_SLASH   # If completed parameter is a directtory, add a trailing slash
@@ -26,7 +26,7 @@ zstyle ':autocomplete:*' ignored-input '..##'
 
 zstyle ':completion:*' use-cache on   # Cache completions. Use rehash to clear
 zstyle ':completion:*' cache-path "XDG_CACHE_HOME/zsh/.zcompcache"
-zstyle ':completion:*' menu select=2 # Show the menuif there are more than 2 items
+zstyle ':completion:*' menu no # Show the menuif there are more than 2 items
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' list-colors "=(#b) #([0-9]#)*=36=31" # Color code completion!!!
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
@@ -43,7 +43,7 @@ users=(williams wsmith williamsmith root)
 zstyle ':completion:*' users $users
 
 # Automatically complete 'cd -<tab>' and 'cd -<ctrd-d>' with menu
-zstyle ':completion:*:*:cd:*:directory-stack'     menu yes select
+# zstyle ':completion:*:*:cd:*:directory-stack'     menu yes select
 
 zstyle ':completion:*:cd:*'                       tag-order local-directories directory-stack path-directories
 
@@ -53,7 +53,7 @@ zstyle ':completion:*:expand:*'                   tag-order all-expansions
 zstyle ':completion:*:history-words'              stop yes
 zstyle ':completion:*:history-words'              remove-all-dups yes
 zstyle ':completion:*:history-words'              list false
-zstyle ':completion:*:history-words'              menu yes
+# zstyle ':completion:*:history-words'              menu yes
 
 zstyle ':completion:*:messages'                   format '%d'
 zstyle ':completion:*:options'                    auto-description '%d'
@@ -76,16 +76,16 @@ zstyle ':completion:*:approximate:*'              max-errors "reply=(  $((($#PRE
 # Complete manuals by their section
 zstyle ':completion:*:manuals'                    separate-sections true
 zstyle ':completion:*:manuals.*'                  insert-sections true
-zstyle ':completion:*:man:*'                      menu yes select
+# zstyle ':completion:*:man:*'                      menu yes select
 
 # Provide more processes in completion of programs like killall
 zstyle ':completion:*:processes-names'            command 'ps c -u $USER -o command | uniq'
 zstyle ':completion:*:processes'                  command 'ps -au$USER -o pid,time,cmd | grep -v "ps -au$USER -o pid,time,cmd"'
-zstyle ':completion:*:*:kill:*'                   menu yes select
+# zstyle ':completion:*:*:kill:*'                   menu yes select
 zstyle ':completion:*:*:kill:*'                   force-list always
 zstyle ':completion:*:*:kill:*'                   insert-ids single
 zstyle ':completion:*:*:kill:*:processes'         list-colors '=(#b) #([0-9]#)[ 0-9:]#([^ ]#)*=01;30=01;31=01;38'
-zstyle ':completion:*:*:killall:*'                menu yes select
+# zstyle ':completion:*:*:killall:*'                menu yes select
 zstyle ':completion:*:*:killall:*'                force-list always
 zstyle ':completion:*:*:killall:*:processes'      list-colors '=(#b) #([0-9]#)[ 0-9:]#([^ ]#)*=01;30=01;31=01;38'
 
