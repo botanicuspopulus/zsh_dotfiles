@@ -18,6 +18,8 @@ le0me55i/zsh-systemd
 
 reegnz/jq-zsh-plugin
 
+brokendisk/dune-quotes
+
 mattmc3/zfunctions
 mattmc3/zman
 zsh-users/zsh-autosuggestions
