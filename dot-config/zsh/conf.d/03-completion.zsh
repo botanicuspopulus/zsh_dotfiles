@@ -26,12 +26,12 @@ zstyle ':autocomplete:*' ignored-input '..##'
 
 zstyle ':completion:*' use-cache on   # Cache completions. Use rehash to clear
 zstyle ':completion:*' cache-path "XDG_CACHE_HOME/zsh/.zcompcache"
-zstyle ':completion:*' menu no # Show the menuif there are more than 2 items
+zstyle ':completion:*' menu no # fzf-tab will try to complete unambiguous prefixes without user confirmation
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' completer _expand _complete _ignored _approximate _extensions
 
 zstyle ':completion:*'                            verbose yes
-zstyle ':completion:*:descriptions'               format '%F{green}%S%B%d%b%s%f'
+zstyle ':completion:*:descriptions'               format '[%d]'
 zstyle ':completion:*:corrections'                format '%F{yellow}%S%B%d (errors:%e)%b%s'
 zstyle ':completion:*:correct:*'                  original true
 zstyle ':completion:*:matches:*'                  group 'yes'
@@ -78,7 +78,7 @@ zstyle ':completion:*:manuals.*'                  insert-sections true
 
 # Provide more processes in completion of programs like killall
 zstyle ':completion:*:processes-names'            command 'ps c -u $USER -o command | uniq'
-zstyle ':completion:*:processes'                  command 'ps -au$USER -o pid,time,cmd | grep -v "ps -au$USER -o pid,time,cmd"'
+zstyle ':completion:*:processes'                  command "ps -u $USER -o pid,user,comm -w -w"
 # zstyle ':completion:*:*:kill:*'                   menu yes select
 zstyle ':completion:*:*:kill:*'                   force-list always
 zstyle ':completion:*:*:kill:*'                   insert-ids single
@@ -93,6 +93,37 @@ zstyle ':completion:*:functions'                  ignored-patterns '(_*|pre(cmd|
 
 # Provide .. as a completion
 zstyle ':completion:*'                            special-dirs ..
+
+# fzf-tab
+zstyle ':fzf-tab:*' fzf-flags --color=$FZF_COLORS
+zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
+zstyle ':fzf-tab:*' switch-group '<' '>'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+zstyle ':fzf-tab:complete:cd:*' popup-pad 30 0
+zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \
+  '[[ $group == "[process ID]" ]] && ps --pid=$word -o cmd --no-headers -w -w'
+zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-flags --preview-window=down:3:wrap
+zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status $word'
+zstyle ':fzf-tab:complete:(-commad-|-parameter-|-brace-parameter-|export|unset|expand):*' \
+  fzf-preview 'echo ${(P)word}'
+  zstyle ':fzf-tab:complete:git-(add|diff|restore):*' fzf-preview \
+    'git diff $word | delta'
+zstyle 'fzf-tab:complete:git-log:*' fzf-preview \
+  'git log --color=always $word'
+zstyle ':fzf-tab:complete:git-show:*' fzf-preview \
+  'case "$group" in
+  "commit tag") git show --color=always $word ;;
+  *) git show --color=alwasys $word | delta ;;
+  esac'
+zstyle ':fzf-tab:complete:git-checkout:*' fzf-preview \
+  'case "$group" in
+  "modified file") git diff $word | delta ;;
+  "recent commit object name") git show --color=always $word | delta ;;
+  *) git log --color=always $word ;;
+  esac'
+zstyle ':fzf-tab:complete:tldr:argument-1' fzf-preview 'tldr --color always $word'
+zstyle ':fzf-tab:complete:-command-:*' fzf-preview \
+   ¦ '(out=$(tldr --color always "$word") 2>/dev/null && echo $out) || (out=$(MANWIDTH=$FZF_PREVIEW_COLUMNS man "$word") 2>/dev/null && echo $out) || (out=$(which "$word") && echo $out) || echo "${(P)word}"'
 
 # Run rehash on completion so new installed programs are found automatically
 function _force_rehash() { 
