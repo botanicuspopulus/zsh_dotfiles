@@ -6,13 +6,13 @@ zmodload -i zsh/complist
 # Don't prompt for a huge list, page it!
 unsetopt MENU_COMPLETE    # Do not auto select the first completion entry
 unsetopt FLOW_CONTROL     # Disable start/stop characters in shell editor
-unsetopt PATHDIRS
+unsetopt PATH_DIRS
 
 # setopt AUTO_MENU          # show completion menu on successive tab press
 setopt COMPLETE_IN_WORD   # Complete from both ends
 setopt ALWAYS_TO_END      # Move cursor to the end of the complete word
 setopt AUTO_PARAM_SLASH   # If completed parameter is a directtory, add a trailing slash
-setopt completealiases    # don't expand aliases _before_ completion has finished
+setopt COMPLETE_ALIASES    # don't expand aliases _before_ completion has finished
 setopt LIST_AMBIGUOUS     # Complete as much of a completion until it gets ambiguous
 setopt HASH_LIST_ALL      # Hash everything before completion
 
@@ -32,8 +32,6 @@ zstyle ':completion:*' completer _expand _complete _ignored _approximate _extens
 
 zstyle ':completion:*'                            verbose yes
 zstyle ':completion:*:descriptions'               format '[%d]'
-zstyle ':completion:*:corrections'                format '%F{yellow}%S%B%d (errors:%e)%b%s'
-zstyle ':completion:*:correct:*'                  original true
 zstyle ':completion:*:matches:*'                  group 'yes'
 zstyle ':completion:*'                            group-name '' # Group completions by type (file, external command, etc)
 
@@ -61,7 +59,6 @@ zstyle ':completion:*:warnings'                   format '%F{orange}%SNo matches
 
 # Define files to ignore for zcompile
 zstyle ':completion:*:*:zcompile:*'               ignored-patterns '(*~|*.zwc)'
-zstyle ':completion:correct:'                     prompt 'Correct to: %e'
 
 zstyle ':completion:*'                            list-dirs-first true
 zstyle ':completion:*'                            file-sort modification reverse # Have the newer files last so I see them first
@@ -74,18 +71,6 @@ zstyle ':completion:*:approximate:*'              max-errors "reply=(  $((($#PRE
 # Complete manuals by their section
 zstyle ':completion:*:manuals'                    separate-sections true
 zstyle ':completion:*:manuals.*'                  insert-sections true
-# zstyle ':completion:*:man:*'                      menu yes select
-
-# Provide more processes in completion of programs like killall
-zstyle ':completion:*:processes-names'            command 'ps c -u $USER -o command | uniq'
-zstyle ':completion:*:processes'                  command "ps -u $USER -o pid,user,comm -w -w"
-# zstyle ':completion:*:*:kill:*'                   menu yes select
-zstyle ':completion:*:*:kill:*'                   force-list always
-zstyle ':completion:*:*:kill:*'                   insert-ids single
-zstyle ':completion:*:*:kill:*:processes'         list-colors '=(#b) #([0-9]#)[ 0-9:]#([^ ]#)*=01;30=01;31=01;38'
-# zstyle ':completion:*:*:killall:*'                menu yes select
-zstyle ':completion:*:*:killall:*'                force-list always
-zstyle ':completion:*:*:killall:*:processes'      list-colors '=(#b) #([0-9]#)[ 0-9:]#([^ ]#)*=01;30=01;31=01;38'
 
 # Ignore completion functions for commands that you don't have
 zstyle ':completion::(^approximate*):*:functions' ignored-patterns '_*'
@@ -93,37 +78,6 @@ zstyle ':completion:*:functions'                  ignored-patterns '(_*|pre(cmd|
 
 # Provide .. as a completion
 zstyle ':completion:*'                            special-dirs ..
-
-# fzf-tab
-zstyle ':fzf-tab:*' fzf-flags --color=$FZF_COLORS
-zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
-zstyle ':fzf-tab:*' switch-group '<' '>'
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
-zstyle ':fzf-tab:complete:cd:*' popup-pad 30 0
-zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \
-  '[[ $group == "[process ID]" ]] && ps --pid=$word -o cmd --no-headers -w -w'
-zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-flags --preview-window=down:3:wrap
-zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status $word'
-zstyle ':fzf-tab:complete:(-commad-|-parameter-|-brace-parameter-|export|unset|expand):*' \
-  fzf-preview 'echo ${(P)word}'
-  zstyle ':fzf-tab:complete:git-(add|diff|restore):*' fzf-preview \
-    'git diff $word | delta'
-zstyle 'fzf-tab:complete:git-log:*' fzf-preview \
-  'git log --color=always $word'
-zstyle ':fzf-tab:complete:git-show:*' fzf-preview \
-  'case "$group" in
-  "commit tag") git show --color=always $word ;;
-  *) git show --color=alwasys $word | delta ;;
-  esac'
-zstyle ':fzf-tab:complete:git-checkout:*' fzf-preview \
-  'case "$group" in
-  "modified file") git diff $word | delta ;;
-  "recent commit object name") git show --color=always $word | delta ;;
-  *) git log --color=always $word ;;
-  esac'
-zstyle ':fzf-tab:complete:tldr:argument-1' fzf-preview 'tldr --color always $word'
-zstyle ':fzf-tab:complete:-command-:*' fzf-preview \
-   ¦ '(out=$(tldr --color always "$word") 2>/dev/null && echo $out) || (out=$(MANWIDTH=$FZF_PREVIEW_COLUMNS man "$word") 2>/dev/null && echo $out) || (out=$(which "$word") && echo $out) || echo "${(P)word}"'
 
 # Run rehash on completion so new installed programs are found automatically
 function _force_rehash() { 
@@ -133,13 +87,6 @@ function _force_rehash() {
 
 zstyle ':completion:*:(rm|vi|nv|vim|kill|diff):*'     ignore-line other # Don't complete stuff already on the line
 zstyle ':completion:*:rm:*'                           file-patterns '*:all-files'
-
-zstyle ':completion:*:(ssh|scp|rsync):*'              tag-order 'hosts:-host:host hosts:-domain:domain hosts:-ip\ address *'
-zstyle ':completion:*:(scp|rsync):*'                  group-order users files all-files hosts-domain hosts-host hosts-ipaddr
-zstyle ':completion:*:ssh:*'                          group-order users hosts-domain hosts-host users hosts-ipaddr
-zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host'   ignored-patterns '*(.|:)*' loopback ip6-loopback localhost ip6-localhost broadcasthost
-zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.<->.<->' '^[-[:alnum:]]##(.[-[:alnum:]]##)##' '*@*'
-zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
 
 # Offer indexes before parameters in subscripts
 zstyle ':completion:*:*:-subscript-:*'                tag-order indexes parameters # completion element sorting
