@@ -28,8 +28,6 @@ zstyle ':completion:*' use-cache on   # Cache completions. Use rehash to clear
 zstyle ':completion:*' cache-path "XDG_CACHE_HOME/zsh/.zcompcache"
 zstyle ':completion:*' menu no # Show the menuif there are more than 2 items
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
-zstyle ':completion:*' list-colors "=(#b) #([0-9]#)*=36=31" # Color code completion!!!
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' completer _expand _complete _ignored _approximate _extensions
 
 zstyle ':completion:*'                            verbose yes
