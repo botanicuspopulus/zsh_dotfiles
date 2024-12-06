@@ -24,6 +24,3 @@ pastefinish() {
 zstyle :bracketed-paste-magic paste-init pasteinit
 zstyle :bracketed-paste-magic paste-finish pastefinish
 ### End of slowness fix
-
-# Suggest corrections for commmands
-setopt correct
