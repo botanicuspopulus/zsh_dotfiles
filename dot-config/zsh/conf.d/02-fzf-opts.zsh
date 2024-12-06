@@ -36,6 +36,8 @@ scrollbar:#27a1b9,\
 separator:#ff9e64,\
 spinner:#ff007c"
 
+export FZF_TMUX_OPTS="-p"
+
 export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
   --highlight-line \
   --info=inline-right \
