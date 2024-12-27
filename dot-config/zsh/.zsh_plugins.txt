@@ -2,15 +2,14 @@ mattmc3/ez-compinit
 
 zimfw/asdf
 
-Aloxaf/fzf-tab
+zsh-users/zsh-completions kind:fpath path:src
+bilelmoussaoui/flatpak-zsh-completion kind:fpath
+CupricReki/zsh-bw-completion kind:fpath
+
 
 mdumitru/fancy-ctrl-z
 
 wfxr/forgit
-
-zsh-users/zsh-completions kind:fpath path:src
-bilelmoussaoui/flatpak-zsh-completion kind:fpath
-CupricReki/zsh-bw-completion kind:fpath
 
 ahmubashshir/zinsults
 
@@ -19,6 +18,8 @@ le0me55i/zsh-systemd
 reegnz/jq-zsh-plugin
 
 brokendisk/dune-quotes
+
+Aloxaf/fzf-tab
 
 mattmc3/zfunctions
 mattmc3/zman
