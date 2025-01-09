@@ -25,7 +25,7 @@ setopt HASH_LIST_ALL      # Hash everything before completion
 zstyle ':autocomplete:*' ignored-input '..##'
 
 zstyle ':completion:*' use-cache on   # Cache completions. Use rehash to clear
-zstyle ':completion:*' cache-path "XDG_CACHE_HOME/zsh/.zcompcache"
+zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
 zstyle ':completion:*' menu no # fzf-tab will try to complete unambiguous prefixes without user confirmation
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' completer _expand _complete _ignored _approximate _extensions
