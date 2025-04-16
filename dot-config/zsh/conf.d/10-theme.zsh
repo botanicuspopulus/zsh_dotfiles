@@ -1,4 +1,4 @@
-export FZF_THEME_NAME="tokyonight_night"
+export FZF_THEME_NAME="catppuccin-macchiato"
 
 if [[ -f ${ZDOTDIR:-$HOME/.config}/themes/${FZF_THEME_NAME}.sh ]]; then
   source "${ZDOTDIR:-$HOME/.config}/themes/${FZF_THEME_NAME}.sh"
