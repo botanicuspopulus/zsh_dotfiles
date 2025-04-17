@@ -20,7 +20,7 @@ zstyle ':fzf-tab:complete:(-command-|-parameter-|-brace-parameter-|export|unset|
   fzf-preview 'echo ${(P)word}'
 zstyle ':fzf-tab:complete:tldr:argument-1' fzf-preview 'tldr --color $word'
 zstyle ':fzf-tab:complete:-command-:*' fzf-preview \
-   '(out=$(tldr --color "$word") 2>/dev/null && echo $out) || (out=$(MANWIDTH=$FZF_PREVIEW_COLUMNS man "$word") 2>/dev/null && echo $out) || (out=$(which "$word") && echo $out) || echo "${(P)word}"'
+   '(tldr --color "$word" 2>/dev/null) || (MANWIDTH=$FZF_PREVIEW_COLUMNS MANPAGER= batman $word 2>/dev/null) || (which "$word") || echo ${(P)word}'
 
 zstyle ':fzf-tab:complete:git-(add|diff|restore):*' fzf-preview \
   'git diff $word | delta'
