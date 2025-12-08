@@ -52,6 +52,8 @@ zstyle ':completion:*:options'                    auto-description '%d'
 zstyle ':completion:*:options'                    description 'yes' # Describe optioins in full
 
 zstyle ':completion:*:warnings'                   format '%F{orange}%SNo matches for%s: %d%f'
+zstyle ':completion:*:*:*:*:corrections' format '%F{yellow}!- %d (errors: %e) -!%f'
+zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
 
 # Define files to ignore for zcompile
 zstyle ':completion:*:*:zcompile:*'               ignored-patterns '(*~|*.zwc)'
