@@ -21,7 +21,7 @@ setopt GLOB_COMPLETE
 setopt MAGIC_EQUAL_SUBST # enable filename expansion for arguments of the form 'anything=expression'
 setopt PROMPT_SUBST
 
-WORDCHARS=''
+WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 
 # Path config
 # Note: Configuring $PATH should preferably be done in the ~/.zshrc file in order that zsh plugins are also provisioned

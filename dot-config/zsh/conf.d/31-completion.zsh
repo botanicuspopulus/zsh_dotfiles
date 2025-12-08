@@ -10,11 +10,7 @@ unsetopt PATH_DIRS
 
 # setopt AUTO_MENU          # show completion menu on successive tab press
 setopt COMPLETE_IN_WORD   # Complete from both ends
-setopt ALWAYS_TO_END      # Move cursor to the end of the complete word
 setopt AUTO_PARAM_SLASH   # If completed parameter is a directtory, add a trailing slash
-setopt COMPLETE_ALIASES    # don't expand aliases _before_ completion has finished
-setopt LIST_AMBIGUOUS     # Complete as much of a completion until it gets ambiguous
-setopt HASH_LIST_ALL      # Hash everything before completion
 
 # General format of zstyle: ":completion:<func>:<completer>:<command>:<argument>:<tag>"
 # <func> is the name of the function that is being called
@@ -25,6 +21,7 @@ setopt HASH_LIST_ALL      # Hash everything before completion
 zstyle ':autocomplete:*' ignored-input '..##'
 
 zstyle ':completion:*' use-cache on   # Cache completions. Use rehash to clear
+zstyle ':completion:*' rehash true
 zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
 zstyle ':completion:*' menu no # fzf-tab will try to complete unambiguous prefixes without user confirmation
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*'
@@ -93,12 +90,6 @@ zstyle ':completion:*:functions'                  ignored-patterns '(_*|pre(cmd|
 
 # Provide .. as a completion
 zstyle ':completion:*'                            special-dirs ..
-
-# Run rehash on completion so new installed programs are found automatically
-function _force_rehash() { 
-  (( CURRENT == 1 )) && rehash
-  return 1
-}
 
 zstyle ':completion:*:(rm|vi|nv|vim|kill|diff):*'     ignore-line other # Don't complete stuff already on the line
 zstyle ':completion:*:rm:*'                           file-patterns '*:all-files'
