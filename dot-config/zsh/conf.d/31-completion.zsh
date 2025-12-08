@@ -99,11 +99,6 @@ zle -N backward-word-shell backward-word-match
 
 zstyle '*' single-ignored show  # Unless absolutely needed
 
-if [[ -s "$DOTFILES/neomutt/aliases" ]]; then
-  zstyle ':completion:*:mutt:*' menu yes select
-  zstyle ':completion:*:mutt:*' users ${${${(f)"$(<"$DOTFILES/neomutt/aliases")"}#alias[[:space:]]}%%[[:space:]]*}
-fi
-
 # Don't mess up url passing as arguments
 zstyle ':urlglobber' url-other-schema
 
