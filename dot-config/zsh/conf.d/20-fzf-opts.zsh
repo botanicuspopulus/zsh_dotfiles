@@ -169,14 +169,17 @@ function fifa() {
 }
 
 function fpdf() {
+  command -v zathura &>/dev/null || { echo "zathura not installed" ; return 1; }
   result=$(fdf --glob '*.pdf' | fzf --bind "ctrl-r:reload(fdf '*.pdf')" --preview "pdftotext {} - | less")
   [[ -n $result ]] && nohup zathura "$result" &>/dev/null & disown
 }
 
 function fman() {
+  command -v man &>/dev/null || { echo "man not installed" ; return 1; }
   man -k . | fzf --query="$1" --prompt='man>' --preview  $'echo {} | tr -d \'()\' | awk \'{printf "%s ", $2} {print $1}\' | xargs -r man' | tr -d '()' | awk '{printf "%s ", $2} {print $1}' | xargs -r man
 }
 
 function fyay() {
+  command -v yay &>/dev/null || { echo "yay not installed" ; return 1; }
   yay -Slq | fzf --multi --reverse --preview 'yay -Si {1}' | xargs -ro yay -S
 }
