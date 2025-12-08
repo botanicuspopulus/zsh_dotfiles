@@ -77,7 +77,6 @@ zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
 zstyle ':completion:*:*:zcompile:*'               ignored-patterns '(*~|*.zwc)'
 
 zstyle ':completion:*'                            list-dirs-first true
-zstyle ':completion:*'                            file-sort modification reverse # Have the newer files last so I see them first
 zstyle ':completion:*'                            hosts off # Don't tab complete hosts (slow and if you have ad-blocking in your hosts files annoying)
 zstyle ':completion:*'                            squeeze-slashes true
 zstyle ':completion:*'                            list-separator '  '
