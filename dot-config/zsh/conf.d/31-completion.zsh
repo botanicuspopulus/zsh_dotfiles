@@ -47,7 +47,7 @@ zstyle ':fzf-tab:complete:(cat|vim|nvim|less):argument-rest' fzf-preview '
       glow -s $realpath 2>/dev/null ;;
     *)
       if [[ -d $realpath ]]; then
-        eza -1lh --icons --group-directories-first --color=always $realpath
+        eza -1 --icons --group-directories-first --color=always $realpath
       elif [[ -f $realpath ]]; then
         bat --style=numbers --color=always $realpath 2>/dev/null || head -n 40 $realpath
       fi ;;
