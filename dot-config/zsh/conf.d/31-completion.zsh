@@ -34,10 +34,6 @@ zstyle ':completion:*'                            verbose yes
 zstyle ':completion:*:descriptions'               format '[%d]'
 zstyle ':completion:*:matches:*'                  group 'yes'
 zstyle ':completion:*'                            group-name '' # Group completions by type (file, external command, etc)
-
-users=(williams wsmith williamsmith root)
-zstyle ':completion:*' users $users
-
 # Automatically complete 'cd -<tab>' and 'cd -<ctrd-d>' with menu
 # zstyle ':completion:*:*:cd:*:directory-stack'     menu yes select
 
