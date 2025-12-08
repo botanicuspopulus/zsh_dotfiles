@@ -127,3 +127,10 @@ zstyle ':completion:*:complete:-command-::commands' ignored-patterns '*~'
 zstyle ':completion::*:(-command-|export):*' fake-parameters ${${${_comps[(I)-value-*]#*,}%%,*}:#-*-}
 
 zstyle ':zle:edit-command-line' editor nvim
+
+autoload -Uz compinit
+if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+  compinit -d ~/.zcompdump
+else
+  compinit -C -d ~/.zcompdump
+fi
