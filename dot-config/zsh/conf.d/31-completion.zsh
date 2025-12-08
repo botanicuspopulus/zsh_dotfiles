@@ -94,7 +94,7 @@ zstyle ':completion:files'                            sort false
 
 zstyle ':zel:*-word-shell'                            word-style shell
 
-zle -N forward-word-shell forwad-word-match
+zle -N forward-word-shell forward-word-match
 zle -N backward-word-shell backward-word-match
 
 zstyle '*' single-ignored show  # Unless absolutely needed
