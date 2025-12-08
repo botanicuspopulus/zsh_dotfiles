@@ -6,7 +6,13 @@ zstyle ':fzf-tab:*' fzf-flags \
   --marker '󰁔 ' \
   --prompt ':: ' \
   --border=none
-zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
+
+if [[ -n $TMUX ]]; then
+  zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
+else
+  zstyle ':fzf-tab:*' fzf-command fzf-tmux
+fi
+
 zstyle ':fzf-tab:*' popup-min-size 50 8
 zstyle ':fzf-tab:*' switch-group '<' '>'
 
@@ -24,7 +30,7 @@ zstyle ':fzf-tab:complete:-command-:*' fzf-preview \
 
 zstyle ':fzf-tab:complete:git-(add|diff|restore):*' fzf-preview \
   'git diff $word | delta'
-zstyle 'fzf-tab:complete:git-log:*' fzf-preview \
+zstyle ':fzf-tab:complete:git-log:*' fzf-preview \
   'git log --color=always $word'
 zstyle ':fzf-tab:complete:git-show:*' fzf-preview \
   'case "$group" in
@@ -38,3 +44,7 @@ zstyle ':fzf-tab:complete:git-checkout:*' fzf-preview \
   *) git log --color=always $word ;;
   esac'
 
+zstyle ':fzf-tab:complete:-command-:*' fzf-preview \
+  '(command -v batman &>/dev/null && batman $word) || \
+  (command -v tldr &>/dev/null && tldr --color "$word") || \
+  (which "$word") || echo ${(P)word})'
