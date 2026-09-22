@@ -43,7 +43,6 @@ fi
 
 # mask built-ins with better defaults
 alias ping='ping -c 5'
-alias cat=bat
 
 # directories
 alias secrets="cd ${XDG_DATA_HOME:=~/.local/share}/secrets"
