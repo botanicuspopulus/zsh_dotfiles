@@ -7,6 +7,10 @@ unsetopt PATH_DIRS
 # setopt AUTO_MENU          # show completion menu on successive tab press
 setopt COMPLETE_IN_WORD   # Complete from both ends
 setopt AUTO_PARAM_SLASH   # If completed parameter is a directtory, add a trailing slash
+setopt ALWAYS_TO_END      # Move cursor to end of word after completing
+setopt AUTO_LIST          # List choices on ambiguous completion
+setopt LIST_PACKED        # Use variable column widths for tighter lists
+_comp_options+=(globdots) # Complete dotfiles without typing the leading "."
 
 # General format of zstyle: ":completion:<func>:<completer>:<command>:<argument>:<tag>"
 # <func> is the name of the function that is being called
@@ -17,7 +21,9 @@ setopt AUTO_PARAM_SLASH   # If completed parameter is a directtory, add a traili
 zstyle ':completion:*' use-cache on   # Cache completions. Use rehash to clear
 zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
 zstyle ':completion:*' menu no # fzf-tab will try to complete unambiguous prefixes without user confirmation
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*'
+# Try exact, then case-insensitive, then word separators (f.b -> foo.bar), then substring
+zstyle ':completion:*' matcher-list \
+  '' 'm:{a-zA-Z}={A-Za-z}' 'm:{a-zA-Z}={A-Za-z} r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' completer _expand _complete _ignored _approximate _extensions
 
 zstyle ':completion:*'                            verbose yes
@@ -30,7 +36,7 @@ zstyle ':completion:*'                            group-name '' # Group completi
 zstyle ':completion:*:cd:*'                       tag-order local-directories directory-stack path-directories
 zstyle ':fzf-tab:complete:cd:*'                   fzf-preview 'eza -1lh --icons --group-directories-first --color=always $realpath'
 
-zstyle ':fzf-tab:complete:(cat|vim|nvim|less):argument-rest' fzf-preview '
+zstyle ':fzf-tab:complete:(cat|bat|vi|vim|nv|nvim|less):argument-rest' fzf-preview '
   case $realpath in
     *.tar|*tar.gz|*.tgz|*.tar.bz2|*.tar.xz)
       tar tf $realpath 2>/dev/null ;;
@@ -67,11 +73,22 @@ zstyle ':completion:*:*:zcompile:*'               ignored-patterns '(*~|*.zwc)'
 
 zstyle ':completion:*'                            list-dirs-first true
 zstyle ':completion:*'                            list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*'                            hosts off # Don't tab complete hosts (slow and if you have ad-blocking in your hosts files annoying)
+# Complete hosts from ssh config and known_hosts only (not /etc/hosts, which may hold ad-blocking entries)
+_ssh_config_hosts() {
+  local -a cfg known
+  cfg=(${(f)"$(cat ~/.ssh/config(N) /dev/null)"})
+  cfg=(${${(M)cfg:#[[:space:]]#[Hh]ost[[:space:]]*}##[[:space:]]#[Hh]ost[[:space:]]##})
+  known=(${(f)"$(cat ~/.ssh/known_hosts(N) /dev/null)"})
+  known=(${${${known%%[ ,]*}#\[}%\]:*})
+  reply=(${(u)${=cfg}:#*[*?]*} ${(u)known:#\|*})
+}
+zstyle -e ':completion:*:hosts' hosts '_ssh_config_hosts'
 zstyle ':completion:*'                            squeeze-slashes true
 zstyle ':completion:*'                            list-separator '  '
 zstyle ':completion:*:match:*'                    original only # Note these need functions to be defined
-zstyle ':completion:*:approximate:*'              max-errors "reply=(  $((($#PREFIX + $#SUFFIX) / 3)) numeric )" # More errors allowed for large words and fewer for small words
+# Allow 1 error for short words, len/3 for longer ones, never more than 3
+zstyle -e ':completion:*:approximate:*' max-errors \
+  'local -i len=$(( $#PREFIX + $#SUFFIX )); reply=( $(( len < 3 ? 1 : (len / 3 > 3 ? 3 : len / 3) )) numeric )'
 
 # Complete manuals by their section
 zstyle ':completion:*:manuals'                    separate-sections true
@@ -90,8 +107,8 @@ zstyle ':completion:*:rm:*'                           file-patterns '*:all-files
 # Offer indexes before parameters in subscripts
 zstyle ':completion:*:*:-subscript-:*'                tag-order indexes parameters # completion element sorting
 
-zstyle ':completion:*:eza'                            sort false
-zstyle ':completion:files'                            sort false
+zstyle ':completion:*:*:eza:*'                        sort false
+zstyle ':completion:*'                                file-sort name
 
 zstyle '*' single-ignored show  # Unless absolutely needed
 
@@ -101,7 +118,5 @@ zstyle ':urlglobber' url-other-schema
 # Don't complete backup files as executables
 zstyle ':completion:*:complete:-command-::commands' ignored-patterns '*~'
 
-# Environment Variables
-zstyle ':completion::*:(-command-|export):*' fake-parameters ${${${_comps[(I)-value-*]#*,}%%,*}:#-*-}
 
 # compinit is run by the ez-compinit plugin, using $XDG_CACHE_HOME/zsh/zcompdump

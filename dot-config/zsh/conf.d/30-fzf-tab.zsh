@@ -7,6 +7,14 @@ zstyle ':fzf-tab:*' fzf-flags \
   --prompt ':: ' \
   --border=none
 
+# Tab toggles selection by default; ctrl-space is the tmux prefix, so don't use it here
+zstyle ':fzf-tab:*' fzf-bindings 'ctrl-a:toggle-all'
+zstyle ':fzf-tab:*' fzf-min-height 15
+
+# Generic file/dir preview for any command; more specific contexts below override it
+zstyle ':fzf-tab:complete:*:*' fzf-preview \
+  '[[ -d $realpath ]] && eza -1 --icons --color=always $realpath || { [[ -f $realpath ]] && bat --color=always --style=numbers $realpath }'
+
 # Outside tmux (e.g. over SSH) fzf-tab falls back to its default, plain fzf
 if [[ -n $TMUX ]]; then
   zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
@@ -42,3 +50,5 @@ zstyle ':fzf-tab:complete:git-checkout:*' fzf-preview \
   "recent commit object name") git show --color=always $word | delta ;;
   *) git log --color=always $word ;;
   esac'
+zstyle ':fzf-tab:complete:(-command-|-parameter-|-brace-parameter-|export|unset|expand):*' \
+  fzf-flags --preview-window=down:3:wrap

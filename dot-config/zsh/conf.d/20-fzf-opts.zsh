@@ -25,8 +25,6 @@ export FZF_DEFAULT_OPTS="\
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
 export FZF_ALT_C_COMMAND="fd --hidden --follow --type directory"
 export FZF_ALT_C_OPTS="--preview='eza --tree --color always --icons --level=2 --only-dirs {} | head -n 50'"
-export FZF_COMPLETION_OPTS='--border --info=inline'
-export FZF_COMPLETION_DIR_COMMANDS="cd pushd rmdir tree ls"
 
 function _fzf_select_and_exit() {
   fzf --select-1 --exit-0 --query="$*"
