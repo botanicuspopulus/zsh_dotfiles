@@ -1,5 +1,5 @@
 if (( $+commands[bat] )); then
-  export BAT_PAGER="less -Rf"
+  export BAT_PAGER="less -RF"
 fi
 
 export PAGER="less"
