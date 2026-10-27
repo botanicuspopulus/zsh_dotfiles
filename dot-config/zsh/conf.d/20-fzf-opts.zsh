@@ -26,7 +26,7 @@ export FZF_DEFAULT_OPTS="\
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
 export FZF_ALT_C_COMMAND="fd --hidden --follow --type directory --strip-cwd-prefix"
 export FZF_CTRL_T_OPTS="--preview 'fzf-preview {}'"
-export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always --icons --level=2 --only-dirs {}'"
+export FZF_ALT_C_OPTS="--preview 'eza \$EZA_COMMON --tree --git-ignore --color=always --icons=always --level=2 --only-dirs {}'"
 
 function _fzf_select_and_exit() {
   fzf --select-1 --exit-0 --query="$*"
@@ -83,7 +83,7 @@ function vf() {
 # global: cd into the directory of the selected file
 function fl() {
   local file=$(fdr | fzf +m -q "$*") && cd "${file:h}"
-  eza --icons
+  eza ${=EZA_COMMON} --icons=auto
 }
 
 # search source code, then pipe files with 10 lines file buffer into fzf preview using bat
