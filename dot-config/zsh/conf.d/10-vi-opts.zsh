@@ -50,3 +50,22 @@ bindkey -M menuselect '^xg' clear-screen
 bindkey -M menuselect '^xh' accept-and-hold
 bindkey -M menuselect '^xn' accept-and-infer-next-history
 bindkey -M menuselect '^xu' undo
+
+# Allow backspace and friends to delete past the point where insert mode began
+bindkey -M viins '^?' backward-delete-char
+bindkey -M viins '^H' backward-delete-char
+bindkey -M viins '^W' backward-kill-word
+bindkey -M viins '^U' backward-kill-line
+
+# Edit the current command line in $EDITOR
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey -M vicmd 'vv' edit-command-line
+
+# Cursor shape: block in normal mode, beam in insert mode
+zle-keymap-select() {
+  [[ $KEYMAP == vicmd ]] && printf '\e[2 q' || printf '\e[6 q'
+}
+zle-line-init() { printf '\e[6 q' }
+zle -N zle-keymap-select
+zle -N zle-line-init

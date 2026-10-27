@@ -81,7 +81,7 @@ alias urlencode='python3 -c "import sys, urllib.parse as ul; \
     print (ul.quote_plus(sys.argv[1]))"'
 
 # misc
-alias zshrc='${EDITOR:-vim} "${ZDOTDIR:-$HOME}"/.zshrc'
+alias zshrc='cd "${ZDOTDIR:-$HOME}" && ${EDITOR:-vim} conf.d'
 alias cls="clear && printf '\e[3J'"
 
 # print things
@@ -93,3 +93,11 @@ alias print-functions='print -l ${(k)functions[(I)[^_]*]} | sort'
 alias autorotate="jhead -autorot"
 
 # vim: ft=zsh sw=2 ts=2 et
+
+# named directories: cd ~dot, ~cfg
+hash -d dot=$DOTFILES
+hash -d cfg=${XDG_CONFIG_HOME:-$HOME/.config}
+
+# batch rename, e.g. mmv *.JPG *.jpg
+autoload -Uz zmv
+alias mmv='noglob zmv -W'

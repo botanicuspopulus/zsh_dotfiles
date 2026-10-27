@@ -5,3 +5,4 @@ setopt PUSHD_TO_HOME      # pushd with no arguments pushes to $HOME
 setopt CDABLE_VARS
 setopt PUSHD_MINUS
 setopt CHASE_LINKS
+DIRSTACKSIZE=20           # keep the directory stack from growing without bound

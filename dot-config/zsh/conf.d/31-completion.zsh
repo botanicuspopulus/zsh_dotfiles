@@ -66,6 +66,7 @@ zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
 zstyle ':completion:*:*:zcompile:*'               ignored-patterns '(*~|*.zwc)'
 
 zstyle ':completion:*'                            list-dirs-first true
+zstyle ':completion:*'                            list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*'                            hosts off # Don't tab complete hosts (slow and if you have ad-blocking in your hosts files annoying)
 zstyle ':completion:*'                            squeeze-slashes true
 zstyle ':completion:*'                            list-separator '  '
