@@ -5,8 +5,6 @@ bindkey -M viins '^E' autosuggest-accept
 bindkey -M viins '^ ' autosuggest-execute
 bindkey -M viins '^K' autosuggest-clear
 
-bindkey -M vicmd ' ' vi-easy-motion
-
 # Accept autosuggestions with shift+tab
 
 ### Fix slowness of pastes with zsh-syntax-highlighting

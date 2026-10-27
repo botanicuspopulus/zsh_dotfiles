@@ -74,9 +74,6 @@ help() {
   "$@" --help 2>&1 | bathelp
 }
 
-alias -g -- -h='-h 2>&1 | bathelp'
-alias -g -- --help='--help 2>&1 | bathelp'
-
 # url encode/decode
 alias urldecode='python3 -c "import sys, urllib.parse as ul; \
     print(ul.unquote_plus(sys.argv[1]))"'
@@ -94,13 +91,5 @@ alias print-functions='print -l ${(k)functions[(I)[^_]*]} | sort'
 
 # auto-orient images based on exif tags
 alias autorotate="jhead -autorot"
-
-# noexpand
-noexpand_aliases=(
-  gpg
-  grep
-  ls
-  vi
-)
 
 # vim: ft=zsh sw=2 ts=2 et

@@ -43,8 +43,3 @@ zstyle ':fzf-tab:complete:git-checkout:*' fzf-preview \
   "recent commit object name") git show --color=always $word | delta ;;
   *) git log --color=always $word ;;
   esac'
-
-zstyle ':fzf-tab:complete:-command-:*' fzf-preview \
-  '(command -v batman &>/dev/null && batman $word) || \
-  (command -v tldr &>/dev/null && tldr --color "$word") || \
-  (which "$word") || echo ${(P)word})'

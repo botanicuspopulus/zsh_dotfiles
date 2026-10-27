@@ -13,12 +13,6 @@ else
   export FZF_DEFAULT_COMMAND='find -L . -mindepth 1 .'
 fi
 
-if [[ -f /usr/share/fzf/completion.zsh ]]; then
-  source /usr/share/fzf/completion.zsh
-elif [[ -f $DOTFILES/fzf/shell/completion.zsh ]]; then
-  source $DOTFILES/fzf/shell/completion.zsh
-fi
-
 export FZF_TMUX_OPTS="-p"
 
 export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
@@ -111,7 +105,7 @@ function _fzf_select_preview() {
     | bat --paging=never --color=always --style=numbers,snip --file-name $file --highlight-line {2} {1}'
 
   echo "$args" | \
-    fzf --select-1 
+    fzf --select-1 \
         --exit-0 \
         --delimiter=':' \
         --preview-window up:$((2*margin + 1)) \

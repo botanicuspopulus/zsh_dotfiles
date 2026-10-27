@@ -36,9 +36,6 @@ bindkey -M vicmd "??" history-beginning-search-forward
 # This is killer.. try it!
 bindkey -M vicmd "q" push-line
 
-# Push your line to the stack and run another command and then pop it back
-bindkey -M vicmd '^q' push-line
-
 # file rename magicks
 bindkey "^[m" copy-prev-shell-word
 

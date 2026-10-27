@@ -1,1 +1,3 @@
-eval "$(zoxide init zsh --cmd cd)"
+if (( $+commands[zoxide] )); then
+  eval "$(zoxide init zsh --cmd cd)"
+fi

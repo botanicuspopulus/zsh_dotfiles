@@ -1,6 +1,3 @@
-setopt LOCAL_OPTIONS      # allow function to have local options
-setopt LOCAL_TRAPS        # allow functions to have local traps
-
 setopt NO_BEEP
 setopt NO_HUP             # don't kill background jobs on exit
 setopt NO_BG_NICE         # don't nice background tasks

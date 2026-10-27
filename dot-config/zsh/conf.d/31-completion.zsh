@@ -1,8 +1,6 @@
 # vim ft=zsh
 autoload -Uz vcs_info
 
-zmodload -i zsh/complist
-
 # Don't prompt for a huge list, page it!
 unsetopt MENU_COMPLETE    # Do not auto select the first completion entry
 unsetopt FLOW_CONTROL     # Disable start/stop characters in shell editor
@@ -62,7 +60,6 @@ zstyle ':completion:*:history-words'              remove-all-dups yes
 zstyle ':completion:*:history-words'              list false
 # zstyle ':completion:*:history-words'              menu yes
 
-zstyle ':completion:*:messages'                   format '%d'
 zstyle ':completion:*:options'                    auto-description '%d'
 zstyle ':completion:*:options'                    description 'yes' # Describe optioins in full
 
@@ -100,7 +97,7 @@ zstyle ':completion:*:*:-subscript-:*'                tag-order indexes paramete
 zstyle ':completion:*:eza'                            sort false
 zstyle ':completion:files'                            sort false
 
-zstyle ':zel:*-word-shell'                            word-style shell
+zstyle ':zle:*-word-shell'                            word-style shell
 
 zle -N forward-word-shell forward-word-match
 zle -N backward-word-shell backward-word-match
@@ -118,9 +115,4 @@ zstyle ':completion::*:(-command-|export):*' fake-parameters ${${${_comps[(I)-va
 
 zstyle ':zle:edit-command-line' editor nvim
 
-autoload -Uz compinit
-if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
-  compinit -d ~/.zcompdump
-else
-  compinit -C -d ~/.zcompdump
-fi
+# compinit is run by the ez-compinit plugin, using $XDG_CACHE_HOME/zsh/zcompdump
