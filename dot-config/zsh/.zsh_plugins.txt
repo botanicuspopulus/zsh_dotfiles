@@ -9,13 +9,9 @@ mdumitru/fancy-ctrl-z
 
 wfxr/forgit
 
-ahmubashshir/zinsults
-
 le0me55i/zsh-systemd
 
 reegnz/jq-zsh-plugin
-
-brokendisk/dune-quotes
 
 Aloxaf/fzf-tab
 
