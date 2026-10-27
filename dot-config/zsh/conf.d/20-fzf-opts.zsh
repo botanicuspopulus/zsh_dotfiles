@@ -13,18 +13,20 @@ else
   export FZF_DEFAULT_COMMAND='find -L . -mindepth 1'
 fi
 
-export FZF_TMUX_OPTS="-p"
+export FZF_TMUX_OPTS="-p 85%,75%"
 
 export FZF_DEFAULT_OPTS="\
   --info=inline-right \
   --layout=reverse \
   --border=rounded \
+  --bind 'ctrl-/:toggle-preview' \
   ${FZF_STYLE} \
   --color '${FZF_COLORS}'"
 
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
 export FZF_ALT_C_COMMAND="fd --hidden --follow --type directory"
-export FZF_ALT_C_OPTS="--preview='eza --tree --color always --icons --level=2 --only-dirs {} | head -n 50'"
+export FZF_CTRL_T_OPTS="--preview 'fzf-preview {}'"
+export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always --icons --level=2 --only-dirs {}'"
 
 function _fzf_select_and_exit() {
   fzf --select-1 --exit-0 --query="$*"
@@ -90,13 +92,13 @@ function fl() {
 # - rg: https://gtihub.com/dandavison/rg
 # - fd: https://github.com/sharkdp/fd
 function s() {
-  local RELOAD='reload:rg --column --line-number --smart-case {q} || :'
+  local RELOAD='reload:rg --color=always --column --line-number --smart-case {q} || :'
   local OPENER='if (( FZF_SELECT_COUNT == 0 )); then
-                  nvim  {1} +{2}
+                  ${EDITOR:-nvim} {1} +{2}
                 else
-                  nvim +cw -q {+f} # Build quickfix list for selected items
+                  ${EDITOR:-nvim} +cw -q {+f} # Build quickfix list for selected items
                 fi'
-  local HEADER_LINES=4
+  local HEADER_LINES=1
   local OFFSET=3
   local TERMINAL_WIDTH=80
   fzf --disabled --ansi \
@@ -105,7 +107,7 @@ function s() {
       --bind "enter:become:$OPENER" \
       --bind "ctrl-o:execute:$OPENER" \
       --delimiter ':' \
-      --preview "bat --style=full --color=always --highlight-line {2} {1}" \
+      --preview "bat --style=numbers,header --color=always --highlight-line {2} {1}" \
       --preview-window "~${HEADER_LINES},+{2}+${HEADER_LINES}/${OFFSET},<${TERMINAL_WIDTH}(up)" \
       --query "$*"
 }
@@ -116,10 +118,8 @@ function fif() {
     return 1
   fi
 
-  rg --files-with-matches --no-messages "$1" \
-    | fzf --preview "bat --color=always --style=plain {} 2> /dev/null \
-    | rg --colors 'match:bg:yellow' --ignore-case --pretty --context 10 '$1' \
-    || rg --ignore-case --pretty --context 10 '$1' {}"
+  Q=$1 rg --files-with-matches --no-messages -- "$1" \
+    | Q=$1 fzf --preview 'rg --pretty --ignore-case --context 10 -- "$Q" {}'
 }
 
 function fifa() {
@@ -128,20 +128,22 @@ function fifa() {
     return 1
   fi
 
-  local file="$(rga --max-count=1 --ignore-case --files-with-matches --no-messages "$*" \
-    | fzf-tmux -p +m --preview="rga --ignore-case --pretty --context 10 '"$*"' {}")" \
+  local file="$(Q="$*" rga --max-count=1 --ignore-case --files-with-matches --no-messages -- "$*" \
+    | Q="$*" fzf-tmux -p +m --preview='rga --ignore-case --pretty --context 10 -- "$Q" {}')" \
     && print -z "./$file" || return 1
 }
 
 function fpdf() {
   command -v zathura &>/dev/null || { echo "zathura not installed" ; return 1; }
-  result=$(fdf --glob '*.pdf' | fzf --bind "ctrl-r:reload(fdf '*.pdf')" --preview "pdftotext {} - | less")
+  local result=$(fdf . -e pdf | fzf --bind "ctrl-r:reload(fdf . -e pdf)" --preview 'fzf-preview {}')
   [[ -n $result ]] && nohup zathura "$result" &>/dev/null & disown
 }
 
 function fman() {
   command -v man &>/dev/null || { echo "man not installed" ; return 1; }
-  man -k . | fzf --query="$1" --prompt='man>' --preview  $'echo {} | tr -d \'()\' | awk \'{printf "%s ", $2} {print $1}\' | xargs -r man' | tr -d '()' | awk '{printf "%s ", $2} {print $1}' | xargs -r man
+  man -k . | fzf --query="$1" --prompt='man> ' \
+    --preview 'MANWIDTH=$FZF_PREVIEW_COLUMNS man {1} 2>/dev/null' \
+    | awk '{print $1}' | xargs -r man
 }
 
 function fyay() {

@@ -34,24 +34,8 @@ zstyle ':completion:*'                            group-name '' # Group completi
 # zstyle ':completion:*:*:cd:*:directory-stack'     menu yes select
 
 zstyle ':completion:*:cd:*'                       tag-order local-directories directory-stack path-directories
-zstyle ':fzf-tab:complete:cd:*'                   fzf-preview 'eza -1lh --icons --group-directories-first --color=always $realpath'
+zstyle ':fzf-tab:complete:cd:*'                   fzf-preview 'fzf-preview $realpath'
 
-zstyle ':fzf-tab:complete:(cat|bat|vi|vim|nv|nvim|less):argument-rest' fzf-preview '
-  case $realpath in
-    *.tar|*tar.gz|*.tgz|*.tar.bz2|*.tar.xz)
-      tar tf $realpath 2>/dev/null ;;
-    *.zip)
-      unzip -l $realpath 2>/dev/null ;;
-    *.md)
-      glow -s $realpath 2>/dev/null ;;
-    *)
-      if [[ -d $realpath ]]; then
-        eza -1 --icons --group-directories-first --color=always $realpath
-      elif [[ -f $realpath ]]; then
-        bat --style=numbers --color=always $realpath 2>/dev/null || head -n 40 $realpath
-      fi ;;
-  esac
-'
 
 # Insert all expansions for expand completer
 zstyle ':completion:*:expand:*'                   tag-order all-expansions
