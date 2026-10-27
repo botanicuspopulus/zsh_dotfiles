@@ -11,7 +11,6 @@ setopt EXTENDED_HISTORY
 setopt SHARE_HISTORY
 
 setopt HIST_IGNORE_SPACE        # Don't record commands that start with a space
-setopt HIST_EXPIRE_DUPS_FIRST   # Allow duplicates, but expire older ones when exceeding HISTSIZE
 setopt HIST_IGNORE_ALL_DUPS     # Ignore duplicate commands
 setopt HIST_FIND_NO_DUPS        # Do not find duplicates in history
 setopt HIST_REDUCE_BLANKS       # Leave no blanks

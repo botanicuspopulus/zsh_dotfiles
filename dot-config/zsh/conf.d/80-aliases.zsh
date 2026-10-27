@@ -85,7 +85,7 @@ alias zshrc='${EDITOR:-vim} "${ZDOTDIR:-$HOME}"/.zshrc'
 alias cls="clear && printf '\e[3J'"
 
 # print things
-alias print-fpath='for fp in $fpath; do echo $fp; done; unset fp'
+alias print-fpath='print -l $fpath'
 alias print-path='echo $PATH | tr ":" "\n"'
 alias print-functions='print -l ${(k)functions[(I)[^_]*]} | sort'
 

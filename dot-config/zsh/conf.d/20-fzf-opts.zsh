@@ -4,18 +4,18 @@
 # fzf-powered CTRL-R
 # Ctrl-T: setting ripgrep or fd as the default source for ctrl-T fzf
 if (( $+commands[rg] )); then
-  export FZF_DEFAULT_COMMAND='rg --hidden --follow --no-messages --glob "!.git/" .'
+  export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-messages --glob "!.git/"'
 elif (( $+commands[fd] )); then
   export FZF_DEFAULT_COMMAND='fd --hidden --follow --type f .'
 elif (( $+commands[ag] )); then
   export FZF_DEFAULT_COMMAND='ag --path-to-ignore ~/.ignore --hidden --nogroup -l .'
 else
-  export FZF_DEFAULT_COMMAND='find -L . -mindepth 1 .'
+  export FZF_DEFAULT_COMMAND='find -L . -mindepth 1'
 fi
 
 export FZF_TMUX_OPTS="-p"
 
-export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
+export FZF_DEFAULT_OPTS="\
   --info=inline-right \
   --layout=reverse \
   --border=rounded \
@@ -32,25 +32,24 @@ function _fzf_select_and_exit() {
   fzf --select-1 --exit-0 --query="$*"
 }
 
-function _fd () {
+function __fd () {
   # Check if $1 is /, if so, use --full-path, otherwise just use fd
   if [[ $1 == "/" ]]; then
-    fd $1 --full-path ${@}
+    fd --full-path "${@:2}" /
   else
     fd $@
   fi
 }
 
-function _fdtype () { _fd $1 --type $2 ${@:3} }
+function _fdtype () { __fd $1 --type $2 ${@:3} }
 function _fdhtype () { _fdtype $1 $2 --hidden --no-ignore ${@:3} }
-function _rg () { rg --no-messages --column --line-number "$*" }
 
-function fdr () { _fd / $@ } 
+function fdr () { __fd / $@ } 
 function fdd () { _fdtype $1 directory ${@:2} }
 function fde () { _fdtype $1 executable ${@:2} }
 function fdf () { _fdtype $1 file ${@:2} }
 function fds () { _fdtype $1 symlink ${@:2} }
-function fdh () { _fd $1 --hidden --no-ignore ${@:2} }
+function fdh () { __fd $1 --hidden --no-ignore ${@:2} }
 function fddh () { _fdhtype $1 directory ${@:2} }
 function fdeh () { _fdhtype $1 executable ${@:2} }
 function fdfh () { _fdhtype $1 file ${@:2} }
@@ -85,31 +84,6 @@ function vf() {
 function fl() {
   local file=$(fdr | fzf +m -q "$*") && cd "${file:h}"
   eza --icons
-}
-
-function _fzf_select_preview() {
-  local args="$*"
-  if (( ${#args} == 0 ))
-  then
-    [ -p /dev/stdin ] && args="$(</dev/stdin)" || exit 1
-  fi
-
-  local margin=5
-  local preview_cmd='search={};
-    search=( ${(s/:/)search} );
-    file=${search[1]};
-    line=${search[2]};
-    margin='${margin}'; 
-    tail -n +$(( (line - margin) > 0 ? (line - margin) : 0)) $file \
-    | head -n $(( margin*2 + 1 )) \
-    | bat --paging=never --color=always --style=numbers,snip --file-name $file --highlight-line {2} {1}'
-
-  echo "$args" | \
-    fzf --select-1 \
-        --exit-0 \
-        --delimiter=':' \
-        --preview-window up:$((2*margin + 1)) \
-        --preview="$preview_cmd"
 }
 
 # search source code, then pipe files with 10 lines file buffer into fzf preview using bat

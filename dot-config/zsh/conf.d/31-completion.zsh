@@ -1,6 +1,4 @@
 # vim ft=zsh
-autoload -Uz vcs_info
-
 # Don't prompt for a huge list, page it!
 unsetopt MENU_COMPLETE    # Do not auto select the first completion entry
 unsetopt FLOW_CONTROL     # Disable start/stop characters in shell editor
@@ -16,10 +14,7 @@ setopt AUTO_PARAM_SLASH   # If completed parameter is a directtory, add a traili
 # <command> is the name of a command or similar context
 # <argument> is the name of an argument to the command. Most useful for commands that take multiple arguments
 
-zstyle ':autocomplete:*' ignored-input '..##'
-
 zstyle ':completion:*' use-cache on   # Cache completions. Use rehash to clear
-zstyle ':completion:*' rehash true
 zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
 zstyle ':completion:*' menu no # fzf-tab will try to complete unambiguous prefixes without user confirmation
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*'
@@ -97,11 +92,6 @@ zstyle ':completion:*:*:-subscript-:*'                tag-order indexes paramete
 zstyle ':completion:*:eza'                            sort false
 zstyle ':completion:files'                            sort false
 
-zstyle ':zle:*-word-shell'                            word-style shell
-
-zle -N forward-word-shell forward-word-match
-zle -N backward-word-shell backward-word-match
-
 zstyle '*' single-ignored show  # Unless absolutely needed
 
 # Don't mess up url passing as arguments
@@ -112,7 +102,5 @@ zstyle ':completion:*:complete:-command-::commands' ignored-patterns '*~'
 
 # Environment Variables
 zstyle ':completion::*:(-command-|export):*' fake-parameters ${${${_comps[(I)-value-*]#*,}%%,*}:#-*-}
-
-zstyle ':zle:edit-command-line' editor nvim
 
 # compinit is run by the ez-compinit plugin, using $XDG_CACHE_HOME/zsh/zcompdump

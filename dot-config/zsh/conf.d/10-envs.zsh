@@ -19,6 +19,5 @@ setopt NUMERIC_GLOB_SORT
 setopt EXTENDED_GLOB 
 setopt GLOB_COMPLETE
 setopt MAGIC_EQUAL_SUBST # enable filename expansion for arguments of the form 'anything=expression'
-setopt PROMPT_SUBST
 
 WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'

@@ -7,10 +7,9 @@ zstyle ':fzf-tab:*' fzf-flags \
   --prompt ':: ' \
   --border=none
 
+# Outside tmux (e.g. over SSH) fzf-tab falls back to its default, plain fzf
 if [[ -n $TMUX ]]; then
   zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
-else
-  zstyle ':fzf-tab:*' fzf-command fzf-tmux
 fi
 
 zstyle ':fzf-tab:*' popup-min-size 50 8

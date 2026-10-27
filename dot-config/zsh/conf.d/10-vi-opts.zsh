@@ -1,6 +1,5 @@
 setopt VI
 
-bindkey -v
 export KEYTIMEOUT=1
 
 autoload -Uz select-bracketed select-quoted
