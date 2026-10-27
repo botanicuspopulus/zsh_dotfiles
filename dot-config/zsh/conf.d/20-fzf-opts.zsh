@@ -3,10 +3,10 @@
 # fzf
 # fzf-powered CTRL-R
 # Ctrl-T: setting ripgrep or fd as the default source for ctrl-T fzf
-if (( $+commands[rg] )); then
+if (( $+commands[fd] )); then
+  export FZF_DEFAULT_COMMAND='fd --hidden --follow --type f --strip-cwd-prefix'
+elif (( $+commands[rg] )); then
   export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-messages --glob "!.git/"'
-elif (( $+commands[fd] )); then
-  export FZF_DEFAULT_COMMAND='fd --hidden --follow --type f .'
 elif (( $+commands[ag] )); then
   export FZF_DEFAULT_COMMAND='ag --path-to-ignore ~/.ignore --hidden --nogroup -l .'
 else
@@ -24,7 +24,7 @@ export FZF_DEFAULT_OPTS="\
   --color '${FZF_COLORS}'"
 
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
-export FZF_ALT_C_COMMAND="fd --hidden --follow --type directory"
+export FZF_ALT_C_COMMAND="fd --hidden --follow --type directory --strip-cwd-prefix"
 export FZF_CTRL_T_OPTS="--preview 'fzf-preview {}'"
 export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always --icons --level=2 --only-dirs {}'"
 
@@ -33,29 +33,30 @@ function _fzf_select_and_exit() {
 }
 
 function __fd () {
-  # Check if $1 is /, if so, use --full-path, otherwise just use fd
+  # If $1 is /, search the whole filesystem (skipping pseudo-filesystems), otherwise just use fd
   if [[ $1 == "/" ]]; then
-    fd --full-path "${@:2}" /
+    fd --full-path --exclude /proc --exclude /sys --exclude /dev --exclude /run "${@:2}" /
   else
-    fd $@
+    fd "$@"
   fi
 }
 
-function _fdtype () { __fd $1 --type $2 ${@:3} }
-function _fdhtype () { _fdtype $1 $2 --hidden --no-ignore ${@:3} }
+# $1 = type, rest passed to fd (pattern optional)
+function _fdtype () { fd --type "$1" "${@:2}" }
+function _fdhtype () { _fdtype "$1" --hidden --no-ignore "${@:2}" }
 
-function fdr () { __fd / $@ } 
-function fdd () { _fdtype $1 directory ${@:2} }
-function fde () { _fdtype $1 executable ${@:2} }
-function fdf () { _fdtype $1 file ${@:2} }
-function fds () { _fdtype $1 symlink ${@:2} }
-function fdh () { __fd $1 --hidden --no-ignore ${@:2} }
-function fddh () { _fdhtype $1 directory ${@:2} }
-function fdeh () { _fdhtype $1 executable ${@:2} }
-function fdfh () { _fdhtype $1 file ${@:2} }
-function fdsh () { _fdhtype $1 symlink ${@:2} }
-function fa() { local dir=$(fdd . | fzf --no-multi --query="$*") && cd "$dir" }
-function fah() { local dir=$(fddh . | fzf --no-multi --query="$*") && cd "$dir" }
+function fdr () { __fd / "$@" }
+function fdd () { _fdtype directory "$@" }
+function fde () { _fdtype executable "$@" }
+function fdf () { _fdtype file "$@" }
+function fds () { _fdtype symlink "$@" }
+function fdh () { fd --hidden --no-ignore "$@" }
+function fddh () { _fdhtype directory "$@" }
+function fdeh () { _fdhtype executable "$@" }
+function fdfh () { _fdhtype file "$@" }
+function fdsh () { _fdhtype symlink "$@" }
+function fa() { local dir=$(fd --type d --strip-cwd-prefix | fzf --no-multi --query="$*") && cd "$dir" }
+function fah() { local dir=$(fd --type d --hidden --no-ignore --strip-cwd-prefix | fzf --no-multi --query="$*") && cd "$dir" }
 function fenv() { env | fzf }
 
 function show() {
@@ -134,9 +135,10 @@ function fifa() {
 }
 
 function fpdf() {
-  command -v zathura &>/dev/null || { echo "zathura not installed" ; return 1; }
-  local result=$(fdf . -e pdf | fzf --bind "ctrl-r:reload(fdf . -e pdf)" --preview 'fzf-preview {}')
-  [[ -n $result ]] && nohup zathura "$result" &>/dev/null & disown
+  local opener=zathura
+  (( $+commands[zathura] )) || opener=xdg-open
+  local result=$(fdf -e pdf | fzf --bind "ctrl-r:reload(fd --type file -e pdf)" --preview 'fzf-preview {}')
+  [[ -n $result ]] && nohup "$opener" "$result" &>/dev/null & disown
 }
 
 function fman() {

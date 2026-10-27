@@ -29,15 +29,15 @@ fi
 
 if (( $+commands[fd] )); then
   chmod_files() {
-    fdf . -X chmod "$1" {}
+    fdfh -X chmod "$1" {}
   }
 
   chown_files() {
-    fdf . -X chown "$1" {}
+    fdfh -X chown "$1" {}
   }
 
   chown_dirs() {
-    fdd . -X chown "$1" {}
+    fddh -X chown "$1" {}
   }
 fi
 
