@@ -15,6 +15,4 @@ setopt HIST_IGNORE_ALL_DUPS     # Ignore duplicate commands
 setopt HIST_FIND_NO_DUPS        # Do not find duplicates in history
 setopt HIST_REDUCE_BLANKS       # Leave no blanks
 setopt HIST_VERIFY              # Show the history expansion to be entered, without executing it
-setopt HIST_SAVE_NO_DUPS       # Do not write duplicates to the history file
-setopt HIST_EXPIRE_DUPS_FIRST   # Expire duplicates first when trimming history
 # setopt BANG_HIST                # !keyword

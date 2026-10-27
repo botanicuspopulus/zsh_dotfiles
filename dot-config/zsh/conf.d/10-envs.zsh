@@ -6,7 +6,6 @@ unsetopt NOMATCH
 
 setopt INTERACTIVE_COMMENTS
 setopt NO_CORRECT
-setopt LIST_PACKED
 setopt NO_LIST_TYPES
 setopt NO_CLOBBER
 setopt NO_CASE_GLOB

@@ -5,6 +5,6 @@
 if (( $+commands[envsubst] )); then 
   command envsubst "$@"
 else
-  python -c 'import os,sys;[sys.stdout.write(os.path.expandvars(l)) for l in sys.stdin]'
+  python3 -c 'import os,sys;[sys.stdout.write(os.path.expandvars(l)) for l in sys.stdin]'
 fi
 # }

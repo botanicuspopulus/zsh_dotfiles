@@ -61,6 +61,7 @@ bindkey -M viins '^U' backward-kill-line
 autoload -Uz edit-command-line
 zle -N edit-command-line
 bindkey -M vicmd 'vv' edit-command-line
+bindkey -M viins '^X^E' edit-command-line
 
 # Cursor shape: block in normal mode, beam in insert mode
 zle-keymap-select() {

@@ -45,7 +45,7 @@ fi
 alias ping='ping -c 5'
 
 # directories
-alias secrets="cd ${XDG_DATA_HOME:=~/.local/share}/secrets"
+alias secrets="cd ${XDG_DATA_HOME:-$HOME/.local/share}/secrets"
 
 # fix typos
 alias get=git

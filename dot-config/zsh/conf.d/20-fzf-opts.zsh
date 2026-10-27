@@ -78,7 +78,6 @@ function vf() {
 }
 
 # global: cd into the directory of the selected file
-# similar to 'zz', but this one does a full global file search
 function fl() {
   local file=$(fdr | fzf +m -q "$*") && cd "${file:h}"
   eza --icons
