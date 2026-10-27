@@ -7,7 +7,7 @@ zle -N bracketed-paste bracketed-paste-magic
 zle -N self-insert url-quote-magic
 
 bindkey -M viins '^E' autosuggest-accept
-bindkey -M viins '^ ' autosuggest-execute
+bindkey -M viins '^[^M' autosuggest-execute  # Alt-Enter (Ctrl-Space is the tmux prefix)
 bindkey -M viins '^K' autosuggest-clear
 
 # zsh-history-substring-search

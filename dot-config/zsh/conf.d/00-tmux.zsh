@@ -15,4 +15,10 @@ tmux-which-key() {
 }
 
 zle -N tmux-which-key
+
+# Mark the start of each prompt (OSC 133) so tmux copy mode can jump between
+# prompts with [ and ]
+_osc133_prompt_mark() { print -n '\e]133;A\e\\' }
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd _osc133_prompt_mark
 bindkey -M vicmd " " tmux-which-key
