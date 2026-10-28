@@ -5,6 +5,8 @@ if [[ -f ${ZDOTDIR:-$HOME/.config/zsh}/themes/${FZF_THEME_NAME}.sh ]]; then
 fi
 
 # File type colours for completion menus and fzf-tab
-if (( $+commands[dircolors] )); then
+if (( $+commands[vivid] )); then
+  export LS_COLORS="$(vivid generate ${FZF_THEME_NAME})"
+elif (( $+commands[dircolors] )); then
   eval "$(dircolors -b)"
 fi
